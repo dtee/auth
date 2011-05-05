@@ -1,0 +1,14 @@
+{% if app.user %}
+	<div class="profile_image">
+		<img src="{{ app.user.getProfileImage() }}" title="{{ app.user }}"/>
+	</div>
+	<div class="user_info smaller">
+		<div>Hi, <a href="{{ path('acme_demo_profile_profile', {'userId': app.user.getId()}) }}">{{ app.user }}</a></div>
+		<div><a href="javascript:void(0)" onclick="signout()">Logout</a></div>
+	</div>
+{% else %}
+	{% spaceless %}
+		<a href="{{ path('acme_demo_auth_auth') }}">Login</a> / 
+		<a href="javascript:void(0)" onclick="fbConnect()">Facebook Connect</a>
+	{% endspaceless %}
+{% endif %}

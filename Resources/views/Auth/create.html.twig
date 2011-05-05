@@ -1,0 +1,16 @@
+{% block title "Symfony - Contact form" %}
+
+{% block content %}
+	
+    <form action="" method="POST" id="create_user_auth">
+        {{ form_row(formView) }}
+        <input type="button" value="Ajax Send" id="submit"/>
+    </form>
+    
+<script>
+$('#create_user_auth #submit').click(function() {
+	$('#create_user_auth').ajaxForm('submit');
+});
+</script>
+    
+{% endblock %}

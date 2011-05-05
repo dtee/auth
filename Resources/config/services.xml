@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+	<parameters>
+		<parameter key="auth.userauth">Acme\DemoBundle\Documents\UserAuth</parameter>
+		<parameter key="auth.form.template">Acme\DemoBundle\Documents\UserAuth</parameter>
+		<parameter key="auth.layout">@ShadowBundle:layout.html.twig</parameter>
+	</parameters>
+	
+    <services>
+        <service id="mongodb.facebook_auth_provider" class="Acme\DemoBundle\MongoDB\MongoDBFacebookAuthProvider">
+        	<argument type="service" id="facebook"></argument>
+        	<argument type="service" id="doctrine.odm.mongodb.default_document_manager"></argument>
+        	<argument>%auth.userauth%</argument>
+        </service>
+        
+        <service id="mongodbo.username_password_provider" class="Acme\DemoBundle\MongoDB\MongoDBUserProvider" public="false">
+            <argument type="service" id="doctrine.odm.mongodb.default_document_manager" />
+            <argument>%auth.userauth%</argument>
+        </service>
+    </services>
+</container>
