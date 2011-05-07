@@ -8,6 +8,12 @@
 		<parameter key="auth.userauth">Acme\DemoBundle\Documents\UserAuth</parameter>
 		<parameter key="auth.form.template">Acme\DemoBundle\Documents\UserAuth</parameter>
 		<parameter key="auth.layout">@ShadowBundle:layout.html.twig</parameter>
+		
+	    <parameter key="appId" type="string">34505942778</parameter>
+	    <!-- <parameter key="key">1487966dff468a4873b97fc4eb0ce0a5</parameter> -->
+	    <parameter key="secret">eeb486fad413e95d218073d5d6bea882</parameter>
+	    <parameter key="cookie">true</parameter>
+    	<parameter key="domain"></parameter>
 	</parameters>
 	
     <services>
@@ -20,6 +26,22 @@
         <service id="mongodbo.username_password_provider" class="Acme\DemoBundle\MongoDB\MongoDBUserProvider" public="false">
             <argument type="service" id="doctrine.odm.mongodb.default_document_manager" />
             <argument>%auth.userauth%</argument>
+        </service>
+        
+        <!-- Override context listener -->
+        <service id="facebook" class="Facebook" public="true">
+        	<argument>%facebook%</argument>
+        </service> 
+        
+        <service id="security.context_listener" class="%security.context_listener.class%" public="false">
+            <tag name="monolog.logger" channel="security" />
+            <argument type="service" id="security.context" />
+            <argument type="collection"></argument>
+            <argument /> <!-- Provider Key -->
+            <argument type="service" id="logger" on-invalid="null" />
+            <argument type="service" id="event_dispatcher" on-invalid="null"/>
+            <argument type="service" id="facebook" on-invalid="null"/>
+            <argument type="service" id="mongodb.facebook_auth_provider" />
         </service>
     </services>
 </container>
