@@ -17,7 +17,7 @@ class UserAuth
 
 	/**
 	 * @mongodb:Field(type="hash")
-	 * @assert:NotBlank
+	 * @assert:NotBlank()
 	 * @assert:Type("Collection")
 	 */
 	protected $roles;
@@ -57,7 +57,7 @@ class UserAuth
     }
 
 	/**
-	 * @return the $facebookAuth
+	 * @return $facebookAuth
 	 */
 	public function getFacebookAuth()
 	{
@@ -86,7 +86,7 @@ class UserAuth
 	}
 
 	/**
-	 * @return the $usernamePasswordAuth
+	 * @return $usernamePasswordAuth
 	 */
 	public function getUsernamePasswordAuth()
 	{
@@ -94,7 +94,7 @@ class UserAuth
 	}
 
 	/**
-	 * @param field_type $facebookAuth
+	 * @param $facebookAuth
 	 */
 	public function setFacebookAuth($facebookAuth)
 	{
@@ -102,7 +102,7 @@ class UserAuth
 	}
 
 	/**
-	 * @param field_type $usernamePasswordAuth
+	 * @param $usernamePasswordAuth
 	 */
 	public function setUsernamePasswordAuth($usernamePasswordAuth)
 	{
@@ -110,7 +110,7 @@ class UserAuth
 	}
 
 	/**
-	 * @return the $createTime
+	 * @return $createTime
 	 */
 	public function getCreateTime()
 	{
@@ -118,7 +118,7 @@ class UserAuth
 	}
 
 	/**
-	 * @return the $id
+	 * @return $id
 	 */
 	public function getId()
 	{
@@ -126,7 +126,7 @@ class UserAuth
 	}
 
 	/**
-	 * @return the $profile
+	 * @return $profile
 	 */
 	public function getProfile()
 	{
@@ -134,7 +134,7 @@ class UserAuth
 	}
 
 	/**
-	 * @param field_type $profile
+	 * @param $profile
 	 */
 	public function setProfile($profile)
 	{
@@ -150,7 +150,7 @@ class UserAuth
 	}
 
 	/**
-	 * @return the $updateTime
+	 * @return $updateTime
 	 */
 	public function getUpdateTime()
 	{
@@ -174,7 +174,7 @@ class UserAuth
 	}
 
 	/**
-	 * @return the $roles
+	 * @return $roles
 	 */
 	public function getRoles()
 	{

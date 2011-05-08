@@ -11,12 +11,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class AuthController
 	extends Controller
 {
-
 	/**
 	 * @extra:Route("/register")
 	 */
 	public function createAction()
 	{
+		$facebook = $this->get('facebook');
 		$formFactory = $this->get('form.factory');
 		$request = $this->get('request');
 

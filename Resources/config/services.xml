@@ -5,32 +5,35 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
 	<parameters>
-		<parameter key="auth.userauth">Acme\DemoBundle\Documents\UserAuth</parameter>
-		<parameter key="auth.form.template">Acme\DemoBundle\Documents\UserAuth</parameter>
-		<parameter key="auth.layout">@ShadowBundle:layout.html.twig</parameter>
-		
-	    <parameter key="appId" type="string">34505942778</parameter>
-	    <!-- <parameter key="key">1487966dff468a4873b97fc4eb0ce0a5</parameter> -->
-	    <parameter key="secret">eeb486fad413e95d218073d5d6bea882</parameter>
-	    <parameter key="cookie">true</parameter>
-    	<parameter key="domain"></parameter>
+		<parameter key="auth.userauth">Odl\AuthBundle\Documents\UserAuth</parameter>
+		<parameter key="auth.form.template">Odl\AuthBundle\Documents\UserAuth</parameter>
+
+		<parameter key="facebook_config">
+		    <parameter key="appId" type="string">34505942778</parameter>
+		    <!-- <parameter key="key">1487966dff468a4873b97fc4eb0ce0a5</parameter> -->
+		    <parameter key="secret">eeb486fad413e95d218073d5d6bea882</parameter>
+		    <parameter key="cookie">true</parameter>
+	    	<parameter key="domain"></parameter>
+    	</parameter>
+    	
+    	<parameter key="security.context_listener.class">Odl\AuthBundle\Firewall\FacebookContextListener</parameter>
 	</parameters>
 	
     <services>
-        <service id="mongodb.facebook_auth_provider" class="Acme\DemoBundle\MongoDB\MongoDBFacebookAuthProvider">
+        <service id="mongodb.facebook_auth_provider" class="Odl\AuthBundle\MongoDB\MongoDBFacebookAuthProvider" public="false">
         	<argument type="service" id="facebook"></argument>
         	<argument type="service" id="doctrine.odm.mongodb.default_document_manager"></argument>
         	<argument>%auth.userauth%</argument>
         </service>
         
-        <service id="mongodbo.username_password_provider" class="Acme\DemoBundle\MongoDB\MongoDBUserProvider" public="false">
+        <service id="mongodbo.username_password_provider" class="Odl\AuthBundle\MongoDB\MongoDBUserProvider" public="false">
             <argument type="service" id="doctrine.odm.mongodb.default_document_manager" />
             <argument>%auth.userauth%</argument>
         </service>
         
         <!-- Override context listener -->
         <service id="facebook" class="Facebook" public="true">
-        	<argument>%facebook%</argument>
+        	<argument>%facebook_config%</argument>
         </service> 
         
         <service id="security.context_listener" class="%security.context_listener.class%" public="false">

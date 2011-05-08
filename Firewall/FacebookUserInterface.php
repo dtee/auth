@@ -1,5 +1,5 @@
 <?php
-namespace Acme\FacebookBundle\Firewall;
+namespace Odl\AuthBundle\Firewall;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 

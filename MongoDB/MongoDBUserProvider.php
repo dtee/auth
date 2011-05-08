@@ -1,5 +1,5 @@
 <?php
-namespace Acme\DemoBundle\MongoDB;
+namespace Odl\AuthBundle\MongoDB;
 
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Doctrine\ODM\MongoDB\DocumentRepository;

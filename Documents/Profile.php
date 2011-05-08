@@ -3,11 +3,6 @@ namespace Odl\AuthBundle\Documents;
 
 /**
  * @mongodb:EmbeddedDocument
- * @mongodb:InheritanceType("SINGLE_COLLECTION")
- * @mongodb:DiscriminatorField(fieldName="type")
- * @mongodb:DiscriminatorMap(
- * 	{	"Profile"="Acme\DemoBundle\Documents\Profile",
- * 		"FacebookProfile"="Acme\DemoBundle\Documents\FacebookProfile"})
  */
 class Profile
 {

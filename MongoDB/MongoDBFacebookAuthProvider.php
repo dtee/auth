@@ -1,5 +1,5 @@
 <?php
-namespace Acme\DemoBundle\MongoDB;
+namespace Odl\AuthBundle\MongoDB;
 
 use Acme\DemoBundle\Documents\UsernamePasswordAuth;
 
@@ -9,12 +9,6 @@ use Acme\DemoBundle\Documents\UserAuth;
 use Acme\DemoBundle\Documents\FacebookProfile;
 use Acme\DemoBundle\Documents\FacebookAuth;
 
-/**
- * id: mongodb.facebook_auth_provider
- *
- * @author David
- *
- */
 class MongoDBFacebookAuthProvider
 {
 	private $dm;

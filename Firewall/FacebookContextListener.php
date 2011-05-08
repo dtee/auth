@@ -1,7 +1,6 @@
 <?php
-namespace Acme\FacebookBundle\Firewall;
+namespace Odl\AuthBundle\Firewall;
 
-use Symfony\Component\Security\Http\Firewall\ContextListener;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
@@ -15,7 +14,8 @@ use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Acme\DemoBundle\MongoDB\MongoDBFacebookAuthProvider;
+
+use Odl\AuthBundle\MongoDB\MongoDBFacebookAuthProvider;
 
 class FacebookContextListener
 	extends ContextListener

@@ -1,8 +1,11 @@
 <?php
 namespace Odl\AuthBundle\Documents;
-use Acme\FacebookBundle\Firewall\FacebookUserInterface;
 
-/** @mongodb:Document(db="user", collection="user_auth_facebook") */
+use Odl\AuthBundle\Firewall\FacebookUserInterface;
+
+/** 
+ * @mongodb:EmbeddedDocument
+ */
 class FacebookAuth
 	implements FacebookUserInterface
 {

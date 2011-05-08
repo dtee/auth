@@ -2,17 +2,12 @@
 namespace Odl\AuthBundle\Documents;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-/** @mongodb:Document(db="user", collection="user_auth_user_pass") */
+/** 
+ * @mongodb:EmbeddedDocument
+ */
 class UsernamePasswordAuth
 	implements UserInterface
 {
-	/**
-	 * @mongodb:Field(type="hash")
-	 * @assert:NotBlank
-	 * @assert:Type("Collection")
-	 */
-	protected $roles;
-
 	/**
 	 * @mongodb:Field(type="string")
 	 * @assert:NotBlank
