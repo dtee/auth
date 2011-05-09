@@ -11,8 +11,6 @@ class OdlAuthExtension
 {
     public function load(array $configs, ContainerBuilder $container)
     {
-    	v('in auth extension');
-
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
 

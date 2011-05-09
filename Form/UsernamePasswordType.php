@@ -13,8 +13,13 @@ class UsernamePasswordType
 	public function buildForm(FormBuilder $builder, array $options)
     {
     	$builder
-    		->add('email')
-    		->add('password', 'text');
+    		->add('email', 'repeated', array(
+	            'first_name' => 'Your Email',
+	            'second_name' => 'Re-enter Email',
+    		))
+    		->add('password', 'text', array(
+    			'label' => 'New password'
+    		));
     }
 
 	public function getDefaultOptions(array $options)
@@ -24,5 +29,4 @@ class UsernamePasswordType
         	'error_bubbling' => false
         );
     }
-
 }

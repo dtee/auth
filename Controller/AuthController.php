@@ -1,6 +1,8 @@
 <?php
 namespace Odl\AuthBundle\Controller;
 
+use Odl\AuthBundle\Form\ProfileType;
+
 use Odl\AuthBundle\Form\UsernamePasswordType;
 use Odl\AuthBundle\Documents\UserAuth;
 
@@ -12,7 +14,7 @@ class AuthController
 	extends Controller
 {
 	/**
-	 * @extra:Route("/register")
+	 * @extra:Route("/register/")
 	 */
 	public function createAction()
 	{
@@ -22,9 +24,14 @@ class AuthController
 
 		$userAuth = new UserAuth();
 		$form = $formFactory
-			->createBuilder('form', $userAuth)
+			->createBuilder('form', $userAuth, array(
+				'label' => 'Sign up'
+			))
+			->add('profile', new ProfileType(), array(
+				'label' => 'Profile Information'
+			))
 			->add('usernamePasswordAuth', new UsernamePasswordType(), array(
-				'label' => null
+				'label' => 'Account Information'
 			))
 			->getForm();
 

@@ -1,16 +1,10 @@
-{% block title "Symfony - Contact form" %}
+{% extends "ShadowBundle::layout.html.twig" %}
+
+{% block title "Register" %}
 
 {% block content %}
-	
-    <form action="" method="POST" id="create_user_auth">
-        {{ form_row(formView) }}
-        <input type="button" value="Ajax Send" id="submit"/>
+    <form method="POST" id="create_user_auth" class="form">
+        {{ form_widget(formView) }}
+        <input type="button" value="Register" onclick="$('#create_user_auth').ajaxForm()"/>
     </form>
-    
-<script>
-$('#create_user_auth #submit').click(function() {
-	$('#create_user_auth').ajaxForm('submit');
-});
-</script>
-    
 {% endblock %}

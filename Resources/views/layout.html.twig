@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>{% block title %}Demo Bundle{% endblock %}</title>
+        {{ 'css_bundle' | jumbo}}
+        {{ 'js_bundle' | jumbo}}
+        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
+    </head>
+    <body>
+        <div class="container">
+            {% block content_header %}
+                <ul id="menu">
+                    {% block content_header_more %}
+                        <li><a href="{{ path('odl_shadow_main_index') }}">Home</a></li>
+                        <li><a href="{{ path('odl_shadow_main_players') }}">Players</a></li>
+                        <li><a href="{{ path('odl_shadow_main_chars') }}">Characters</a></li>
+                        <li><a href="{{ path('odl_shadow_main_games') }}">Games</a></li>
+                    {% endblock %}
+                </ul>
+
+                <div style="clear: both"></div>
+            {% endblock %}
+
+            <div class="content">
+                {% block content %}
+                {% endblock %}
+            </div>
+
+        </div>
+    </body>
+</html>
