@@ -10,17 +10,17 @@ class UsernamePasswordAuth
 {
 	/**
 	 * @mongodb:Field(type="string")
-	 * @assert:NotBlank
-	 * @assert:MinLength(5)
+	 * @assert:NotBlank()
+	 * @assert:MinLength(6)
 	 * @assert:MaxLength(20)
 	 */
 	protected $password;
 
 	/**
 	 * @mongodb:id(strategy="NONE")
-	 * @assert:NotBlank
-	 * @assert:Email
-	 * @assert:MinLength(5)
+	 * @assert:NotBlank()
+	 * @assert:Email()
+	 * @assert:MinLength(6)
 	 * @assert:MaxLength(50)
 	 */
 	protected $email;

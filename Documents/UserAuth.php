@@ -18,7 +18,6 @@ class UserAuth
 	/**
 	 * @mongodb:Field(type="hash")
 	 * @assert:NotBlank()
-	 * @assert:Type("Collection")
 	 */
 	protected $roles;
 

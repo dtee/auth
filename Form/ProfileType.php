@@ -13,16 +13,19 @@ class ProfileType
 	public function buildForm(FormBuilder $builder, array $options)
     {
     	$builder
-    		->add('firstName', 'text')
-    		->add('lastName', 'text');
+    		->add('firstName', 'text', array(
+    			'required' => true
+    		))
+    		->add('lastName', 'text', array(
+    			'required' => true
+    		));
     }
+
 
 	public function getDefaultOptions(array $options)
     {
         return array(
-            'data_class' => 'Odl\AuthBundle\Documents\UsernamePasswordAuth',
-        	'error_bubbling' => false
+            'data_class' => 'Odl\AuthBundle\Documents\Profile',
         );
     }
-
 }

@@ -13,11 +13,12 @@ class UsernamePasswordType
 	public function buildForm(FormBuilder $builder, array $options)
     {
     	$builder
-    		->add('email', 'repeated', array(
+    		/*->add('email', 'repeated', array(
 	            'first_name' => 'Your Email',
 	            'second_name' => 'Re-enter Email',
-    		))
-    		->add('password', 'text', array(
+    		))*/
+    		->add('email', 'text')
+    		->add('password', 'password', array(
     			'label' => 'New password'
     		));
     }

@@ -9,7 +9,7 @@ class Profile
 	/**
 	 * @mongodb:String
 	 * @assert:NotBlank
-	 * @assert:MinLength(5)
+	 * @assert:MinLength(2)
 	 * @assert:MaxLength(25)
 	 */
 	protected $firstName;
@@ -17,7 +17,7 @@ class Profile
 	/**
 	 * @mongodb:String
 	 * @assert:NotBlank
-	 * @assert:MinLength(5)
+	 * @assert:MinLength(2)
 	 * @assert:MaxLength(25)
 	 */
 	protected $lastName;
