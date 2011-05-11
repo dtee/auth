@@ -4,7 +4,8 @@ namespace Odl\AuthBundle\Documents;
 /** 
  * @mongodb:EmbeddedDocument
  */
-class FacebookProfile extends Profile
+class FacebookProfile 
+	extends Profile
 {
 	/**
 	 * @mongodb:String

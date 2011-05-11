@@ -27,7 +27,7 @@ class MongoDBUserProvider
      */
     public function loadUserByUsername($username) {
         $user = $this->repository->findOneBy(
-        	array('usernamePasswordAuth.email' => $username));
+        	array('email' => $username));
 
         if (!$user) {
         	return null;

@@ -5,6 +5,8 @@ namespace Odl\AuthBundle\Documents;
  * @mongodb:Document(db="user", collection="user_auth")
  * @mongodb:HasLifecycleCallbacks
  */
+use Symfony\Component\Security\Core\User\UserInterface;
+
 class UserAuth
 	implements UserInterface
 {
@@ -28,6 +30,7 @@ class UserAuth
 
 	/**
 	 * @mongodb:Field(type="string")
+	 * 
 	 * @assert:NotBlank()
 	 * @assert:MinLength(6)
 	 * @assert:MaxLength(20)
@@ -36,6 +39,7 @@ class UserAuth
 
 	/**
 	 * @mongodb:Field(type="string")
+	 * 
 	 * @assert:NotBlank
 	 */
 	protected $salt;
@@ -64,33 +68,15 @@ class UserAuth
 	protected $profile;
 
 	/**
-	 * @mongodb:EmbedOne(targetDocument="FacebookAuth")
+	 * @mongodb:EmbedOne(targetDocument="FacebookProfile")
 	 * @mongodb:Index
 	 */
-	protected $facebookAuth;
+	protected $facebookProfile;
 
 	public function __construct()
     {
 		$this->roles = array('ROLE_USER');
     }
-
-	/**
-	 * @return $facebookAuth
-	 */
-	public function getFacebookAuth()
-	{
-		return $this->facebookAuth;
-	}
-
-	public function getFacebookUserId()
-	{
-		if ($this->facebookAuth)
-		{
-			return $this->facebookAuth->getFacebookUserId();
-		}
-
-		return null;
-	}
 
 	public function getProfileImage()
 	{
@@ -141,6 +127,74 @@ class UserAuth
 	public function setProfile($profile)
 	{
 		$this->profile = $profile;
+	}
+
+	/**
+	 * @return the $email
+	 */
+	public function getEmail() {
+		return $this->email;
+	}
+
+	/**
+	 * @return the $password
+	 */
+	public function getPassword() {
+		return $this->password;
+	}
+
+	/**
+	 * @return the $salt
+	 */
+	public function getSalt() {
+		return $this->salt;
+	}
+
+	/**
+	 * @return the $facebookProfile
+	 */
+	public function getFacebookProfile() {
+		return $this->facebookProfile;
+	}
+
+	/**
+	 * @param field_type $email
+	 */
+	public function setEmail($email) {
+		$this->email = $email;
+	}
+	
+	public function getUsername() {
+		return $this->email;
+	}
+
+	/**
+	 * @param field_type $password
+	 */
+	public function setPassword($password) {
+		$this->password = $password;
+	}
+	
+	public function eraseCredentials() {
+		$this->password = null;
+	}
+	
+	public function equals(UserInterface $that) {
+		return $this->email == $that->email;
+	}
+
+	/**
+	 * @param field_type $salt
+	 */
+	public function setSalt($salt) {
+		$this->salt = $salt;
+	}
+
+	/**
+	 * @param field_type $facebookProfile
+	 */
+	public function setFacebookProfile($facebookProfile) {
+		$this->facebookProfile = $facebookProfile;
 	}
 
 	/**

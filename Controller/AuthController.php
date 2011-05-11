@@ -3,8 +3,6 @@ namespace Odl\AuthBundle\Controller;
 
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
-use Odl\AuthBundle\Documents\UsernamePasswordAuth;
-
 use Odl\AuthBundle\Form\ProfileType;
 use Odl\AuthBundle\Form\UsernamePasswordType;
 use Odl\AuthBundle\Documents\UserAuth;
@@ -28,8 +26,6 @@ class AuthController
 
 		$userAuth = $userProvider->loadUserByUsername('davidkmo@gmail.com');
 
-		$usernamePasswordAuth = $userAuth->getUsernamePasswordAuth();
-		v($usernamePasswordAuth);
 		ve($userAuth);
 
         $token = new UsernamePasswordToken(
@@ -50,14 +46,14 @@ class AuthController
 		$userAuth = new UserAuth();
 		$userAuth->setRoles(array('ROLE_USER'));
 
-		$usernamePasswordAuth = new UsernamePasswordAuth();
-		$usernamePasswordAuth->setSalt(time());
-		$userAuth->setUsernamePasswordAuth($usernamePasswordAuth);
-
 		$form = $formFactory
 			->createBuilder('form', $userAuth, array(
 				'label' => 'Sign up'
 			))
+    		->add('email', 'text')
+    		->add('password', 'password', array(
+    			'label' => 'New password'
+    		))
 			->add('profile', new ProfileType(), array(
 				'label' => 'Profile Information'
 			))
