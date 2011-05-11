@@ -25,15 +25,15 @@ class MongoDBUserProvider
     /**
      * {@inheritdoc}
      */
-    public function loadUserByUsername($username)
-    {
-        // do whatever you need to retrieve the user from the database
-        // code below is the implementation used when using the property setting
-        $user = $this->getRepository()->findOneBy(array('username' => $username));
-        if (!$user)
-        {
-        	throw  new UsernameNotFoundException();
+    public function loadUserByUsername($username) {
+        $user = $this->repository->findOneBy(
+        	array('usernamePasswordAuth.email' => $username));
+
+        if (!$user) {
+        	return null;
         }
+
+        return $user;
     }
 
     /**
@@ -41,10 +41,7 @@ class MongoDBUserProvider
      */
     public function loadUser(UserInterface $user)
     {
-		$query = array('facebookAuth.$id' => $facebookUserId);
-        $query = array('username' => $user->getUserName());
-
-    	return $this->getRepository()->findOneBy($query);
+    	return $this->loadUserByUsername($user->getUsername());
     }
 
     /**

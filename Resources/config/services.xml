@@ -20,13 +20,13 @@
 	</parameters>
 	
     <services>
-        <service id="mongodb.facebook_auth_provider" class="Odl\AuthBundle\MongoDB\MongoDBFacebookAuthProvider" public="false">
+        <service id="auth.mongodb.facebook_auth_provider" class="Odl\AuthBundle\MongoDB\MongoDBFacebookAuthProvider" public="false">
         	<argument type="service" id="facebook"></argument>
         	<argument type="service" id="doctrine.odm.mongodb.default_document_manager"></argument>
         	<argument>%auth.userauth%</argument>
         </service>
         
-        <service id="mongodbo.username_password_provider" class="Odl\AuthBundle\MongoDB\MongoDBUserProvider" public="false">
+        <service id="auth.mongodb.username_password_provider" class="Odl\AuthBundle\MongoDB\MongoDBUserProvider" public="true">
             <argument type="service" id="doctrine.odm.mongodb.default_document_manager" />
             <argument>%auth.userauth%</argument>
         </service>
@@ -44,7 +44,18 @@
             <argument type="service" id="logger" on-invalid="null" />
             <argument type="service" id="event_dispatcher" on-invalid="null"/>
             <argument type="service" id="facebook" on-invalid="null"/>
-            <argument type="service" id="mongodb.facebook_auth_provider" />
+            <argument type="service" id="auth.mongodb.facebook_auth_provider" />
         </service>
+        
+        <!-- Validators -->
+        <service id="auth.validator.unique.email" class="Odl\AuthBundle\Validator\Constraints\UniqueUsernamePasswordValidator">
+		    <argument type="service" id="auth.mongodb.username_password_provider" />
+		    <tag name="validator.constraint_validator" alias="auth_unique_username_password" />
+		</service>
+		
+        <service id="auth.validator.unique.facebook_user" class="Odl\AuthBundle\Validator\Constraints\UniqueFacebookUserValidator">
+		    <argument type="service" id="auth.mongodb.facebook_auth_provider" />
+		    <tag name="validator.constraint_validator" alias="auth_unique_facebookuser" />
+		</service>
     </services>
 </container>

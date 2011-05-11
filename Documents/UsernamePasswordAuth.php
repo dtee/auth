@@ -2,8 +2,9 @@
 namespace Odl\AuthBundle\Documents;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-/** 
+/**
  * @mongodb:EmbeddedDocument
+ * @mongodb:Index()
  */
 class UsernamePasswordAuth
 	implements UserInterface
@@ -17,11 +18,14 @@ class UsernamePasswordAuth
 	protected $password;
 
 	/**
-	 * @mongodb:id(strategy="NONE")
+	 * @mongodb:Field(type="string")
+	 * @mongodb:UniqueIndex()
+	 *
 	 * @assert:NotBlank()
 	 * @assert:Email()
 	 * @assert:MinLength(6)
 	 * @assert:MaxLength(50)
+	 * @assertAuth:UniqueUsernamePassword()
 	 */
 	protected $email;
 

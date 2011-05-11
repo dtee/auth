@@ -3,8 +3,9 @@ namespace Odl\AuthBundle\Documents;
 
 use Odl\AuthBundle\Firewall\FacebookUserInterface;
 
-/** 
+/**
  * @mongodb:EmbeddedDocument
+ * @mongodb:Index
  */
 class FacebookAuth
 	implements FacebookUserInterface
@@ -27,6 +28,7 @@ class FacebookAuth
 
 	/**
 	 * @mongodb:id(strategy="NONE")
+	 * @mongodb:Index()
 	 */
 	protected $facebookUserId;
 

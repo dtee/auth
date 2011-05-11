@@ -3,17 +3,42 @@ namespace Odl\AuthBundle\Documents;
 
 /**
  * @mongodb:Document(db="user", collection="user_auth")
- * @mongodb:Indexes({
- *   @mongodb:Index(keys={"facebookAuth.$id"="asc"}),
- *   @mongodb:Index(keys={"usernamePasswordAuth.$id"="asc"})
- * })
+ * @mongodb:HasLifecycleCallbacks
  */
 class UserAuth
+	implements UserInterface
 {
 	/**
 	 * @mongodb:id
 	 */
 	protected $id;
+
+
+	/**
+	 * @mongodb:Field(type="string")
+	 * @mongodb:UniqueIndex()
+	 *
+	 * @assert:NotBlank()
+	 * @assert:Email()
+	 * @assert:MinLength(6)
+	 * @assert:MaxLength(50)
+	 * @assertAuth:UniqueUsernamePassword()
+	 */
+	protected $email;
+
+	/**
+	 * @mongodb:Field(type="string")
+	 * @assert:NotBlank()
+	 * @assert:MinLength(6)
+	 * @assert:MaxLength(20)
+	 */
+	protected $password;
+
+	/**
+	 * @mongodb:Field(type="string")
+	 * @assert:NotBlank
+	 */
+	protected $salt;
 
 	/**
 	 * @mongodb:Field(type="hash")
@@ -39,16 +64,10 @@ class UserAuth
 	protected $profile;
 
 	/**
-	 * @mongodb:ReferenceOne(targetDocument="FacebookAuth")
+	 * @mongodb:EmbedOne(targetDocument="FacebookAuth")
 	 * @mongodb:Index
 	 */
 	protected $facebookAuth;
-
-	/**
-	 * @mongodb:ReferenceOne(targetDocument="UsernamePasswordAuth")
-	 * @mongodb:Index
-	 */
-	protected $usernamePasswordAuth;
 
 	public function __construct()
     {
@@ -85,27 +104,11 @@ class UserAuth
 	}
 
 	/**
-	 * @return $usernamePasswordAuth
-	 */
-	public function getUsernamePasswordAuth()
-	{
-		return $this->usernamePasswordAuth;
-	}
-
-	/**
 	 * @param $facebookAuth
 	 */
 	public function setFacebookAuth($facebookAuth)
 	{
 		$this->facebookAuth = $facebookAuth;
-	}
-
-	/**
-	 * @param $usernamePasswordAuth
-	 */
-	public function setUsernamePasswordAuth($usernamePasswordAuth)
-	{
-		$this->usernamePasswordAuth = $usernamePasswordAuth;
 	}
 
 	/**
@@ -194,5 +197,13 @@ class UserAuth
     	}
 
     	return $this->getId();
+    }
+
+    /**
+     * @mongodb:PostLoad
+     */
+	public function setReferenceOnPostLoad()
+    {
+    	// Set references
     }
 }
