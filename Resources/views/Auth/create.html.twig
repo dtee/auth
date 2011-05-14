@@ -3,7 +3,7 @@
 {% block title "Register" %}
 
 {% block content %}
-	<div class="register">
+	<div class="register auth">
 		<h3>
 			Sign Up
 			<div class="small">
@@ -14,7 +14,7 @@
 	    	action="{{ path('odl_auth_auth_register') }}">
 	    	
 	        {{ form_widget(formView) }}
-	        <input type="submit" value="Register" />
+	        <input type="submit" value="Login" />
 	    </form>
 	    
 	    <script>

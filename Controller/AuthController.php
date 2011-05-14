@@ -1,6 +1,7 @@
 <?php
 namespace Odl\AuthBundle\Controller;
 
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 use Odl\AuthBundle\Form\ProfileType;
@@ -19,46 +20,21 @@ class AuthController
 	 */
 	public function registerAction()
 	{
-		$authenticationManager = $this->get('security.authentication.manager');
-		$token = new UsernamePasswordToken('test', 'test', 'create_auth');
-
-		$userProvider = $this->get('auth.mongodb.username_password_provider');
-
-		$userAuth = $userProvider->loadUserByUsername('davidkmo@gmail.com');
-
-		ve($userAuth);
-
-        $token = new UsernamePasswordToken(
-        	$usernamePasswordAuth->getUsername(),
-        	$usernamePasswordAuth->getPassword(),
-        	'admin');
-
-        $authenticationManager->authenticate($token);
-
-		sort($ids);
-		ve($ids);
-
 		// Set up form
-		$facebook = $this->get('facebook');
 		$formFactory = $this->get('form.factory');
 		$request = $this->get('request');
 
-		$userAuth = new UserAuth();
-		$userAuth->setRoles(array('ROLE_USER'));
+		$userManager = $this->get('fos_user.user_manager');
+		$userAuth = $userManager->createUser();
 
 		$form = $formFactory
-			->createBuilder('form', $userAuth, array(
-				'label' => 'Sign up'
-			))
+			->createBuilder('form', $userAuth)
     		->add('email', 'text')
-    		->add('password', 'password', array(
+    		->add('plainPassword', 'password', array(
     			'label' => 'New password'
     		))
 			->add('profile', new ProfileType(), array(
 				'label' => 'Profile Information'
-			))
-			->add('usernamePasswordAuth', new UsernamePasswordType(), array(
-				'label' => 'Account Information'
 			))
 			->getForm();
 
@@ -69,27 +45,12 @@ class AuthController
 			// Creates user auth
 			if ($form->isValid()) {
 				// Handle success, lets create a user?
-				$dm = $this->get('doctrine.odm.mongodb.default_document_manager');
-				$factory = $this->get('security.encoder_factory');
-				$encoder = $factory->getEncoder($usernamePasswordAuth);
-				$password = $encoder->encodePassword(
-					'user', $usernamePasswordAuth->getSalt());
 
-				$usernamePasswordAuth->setPassword($password);
+				$userManager->updateUser($userAuth, true);
 
-				$dm->persist($userAuth);
-		        $dm->flush();
-
-		        // Lets log the user into the system... raise event?
-		        $authenticationManager = $this->get('security.authentication.manager');
-		        $token = new UsernamePasswordToken(
-		        	$usernamePasswordAuth->getUsername(),
-		        	$usernamePasswordAuth->getPassword(),
-		        	$this->providerKey);
-
-		        $success = $authenticationManager->authenticate($token);
-
-		        // Where shall we redirect them to?
+		        // Log the user in
+				$this->authenticateUser($userAuth);
+				$retVal['href'] = '/';
 	        }
 		}
 
@@ -116,25 +77,102 @@ class AuthController
 	}
 
 	/**
-	 * @extra:Route("/login")
+	 * @extra:Route("/fb-register")
 	 * @Template()
+	 */
+	public function fbRegister() {
+		$facebook = $this->get('facebook');
+	}
+
+	/**
+	 * @extra:Route("/login")
 	 */
 	public function loginAction()
 	{
-		$facebook = $this->get('facebook');
 		$formFactory = $this->get('form.factory');
 		$request = $this->get('request');
+		$userManager = $this->get('fos_user.user_manager');
 
+		$userAuth = $userManager->createUser();
 		$form = $formFactory
-			->createBuilder('form', $userAuth, array(
-				'label' => 'Sign up'
-			))
-			->add('profile', new ProfileType(), array(
-				'label' => 'Profile Information'
-			))
-			->add('usernamePasswordAuth', new UsernamePasswordType(), array(
-				'label' => 'Account Information'
-			))
+			->createBuilder('form')
+    		->add('email', 'text')
+    		->add('plainPassword', 'password', array(
+    			'label' => 'Password'
+    		))
 			->getForm();
+
+		// Handles Success - database wise
+		if ($request->getMethod() == 'POST') {
+			$form->bindRequest($request);
+
+			$data = $form->getData();
+			ve($data);
+			// Creates user auth
+			if ($form->isValid()) {
+				// Handle success, lets create a user?
+
+				$userManager->updateUser($userAuth, true);
+
+		        // Log the user in
+				$this->authenticateUser($userAuth);
+				$retVal['href'] = '/';
+	        }
+		}
+
+		// Handles render -
+        $response = new Response();
+		if ($request->isXmlHttpRequest())
+		{
+        	$errorsProvider = $this->get('form.errors');
+        	$retVal['error'] = $errorsProvider->getErrors($form);
+        	$content = json_encode($retVal);
+		}
+		else
+		{
+			$params = array();
+        	$params =  array(
+        		'formView' => $form->createView()
+        	);
+			$content = $this->renderView(
+				'OdlAuthBundle:Auth:login.html.twig', $params);
+		}
+		$response->setContent($content);
+
+		return $response;
 	}
+
+	/**
+	 * @extra:Route("/logout")
+	 * @Template()
+	 */
+	public function logoutAction() {
+
+	}
+
+	/**
+	 * @extra:Route("/password-recover")
+	 * @Template()
+	 */
+	public function forgetPasswordAction() {
+
+	}
+
+    /**
+     * Authenticate a user with Symfony Security
+     *
+     * @param Boolean $reAuthenticate
+     * @return null
+     */
+    protected function authenticateUser(UserInterface $user, $reAuthenticate = false)
+    {
+        $providerKey = $this->container->getParameter('fos_user.firewall_name');
+        $token = new UsernamePasswordToken($user, null, $providerKey, $user->getRoles());
+
+        if (true === $reAuthenticate) {
+            $token->setAuthenticated(false);
+        }
+
+        $this->container->get('security.context')->setToken($token);
+    }
 }

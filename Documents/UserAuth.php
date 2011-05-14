@@ -1,20 +1,32 @@
 <?php
 namespace Odl\AuthBundle\Documents;
+use Symfony\Component\Security\Core\User\UserInterface;
+use FOS\UserBundle\Document\User;
 
 /**
  * @mongodb:Document(db="user", collection="user_auth")
- * @mongodb:HasLifecycleCallbacks
  */
-use Symfony\Component\Security\Core\User\UserInterface;
-
 class UserAuth
-	implements UserInterface
+	extends User
 {
 	/**
-	 * @mongodb:id
+	 * @mongodb:Id
 	 */
 	protected $id;
 
+	/**
+	 * @mongodb:Field(type="string")
+	 * @mongodb:UniqueIndex()
+	 *
+	 * @assert:MinLength(6)
+	 * @assert:MaxLength(50)
+	 */
+	protected $username;
+
+	/**
+	 * @mongodb:Field(type="string")
+	 */
+    protected $usernameCanonical;
 
 	/**
 	 * @mongodb:Field(type="string")
@@ -24,46 +36,76 @@ class UserAuth
 	 * @assert:Email()
 	 * @assert:MinLength(6)
 	 * @assert:MaxLength(50)
-	 * @assertAuth:UniqueUsernamePassword()
 	 */
 	protected $email;
 
 	/**
 	 * @mongodb:Field(type="string")
-	 * 
-	 * @assert:NotBlank()
-	 * @assert:MinLength(6)
-	 * @assert:MaxLength(20)
+	 */
+    protected $emailCanonical;
+
+	/**
+	 * @mongodb:Field(type="string")
 	 */
 	protected $password;
 
 	/**
+	 * @mongodb:NotSaved
+	 *
+	 * @assert:NotBlank()
+	 * @assert:MinLength(6)
+	 * @assert:MaxLength(20)
+	 */
+	protected $plainPassword;
+
+	/**
 	 * @mongodb:Field(type="string")
-	 * 
+	 *
 	 * @assert:NotBlank
 	 */
 	protected $salt;
 
 	/**
-	 * @mongodb:Field(type="hash")
+	 * @mongodb:Field(type="collection")
 	 * @assert:NotBlank()
 	 */
 	protected $roles;
 
 	/**
 	 * @mongodb:Field(type="date")
+	 */
+	protected $expiresAt;
+
+	/**
+	 * @mongodb:Field(type="boolean")
+	 */
+	protected $expired;
+
+	/**
+	 * @mongodb:Field(type="date")
 	 * @gedmo:Timestampable(on="create")
 	 */
-	protected $createTime;
+	protected $createdAt;
 
 	/**
 	 * @mongodb:Field(type="date")
 	 * @gedmo:Timestampable(on="update")
 	 */
-	protected $updateTime;
+	protected $updatedAt;
+
+	/**
+	 * @mongodb:Field(type="boolean")
+	 */
+    protected $credentialsExpired;
+
+	/**
+	 * @mongodb:Field(type="date")
+	 */
+    protected $credentialsExpireAt;
 
 	/**
 	 * @mongodb:EmbedOne(targetDocument="Profile")
+	 * @mongodb:Index
 	 */
 	protected $profile;
 
@@ -73,10 +115,11 @@ class UserAuth
 	 */
 	protected $facebookProfile;
 
-	public function __construct()
-    {
-		$this->roles = array('ROLE_USER');
-    }
+	/**
+	 * @mongodb:Field(type="collection")
+	 */
+    protected $groups;
+
 
 	public function getProfileImage()
 	{
@@ -130,64 +173,10 @@ class UserAuth
 	}
 
 	/**
-	 * @return the $email
-	 */
-	public function getEmail() {
-		return $this->email;
-	}
-
-	/**
-	 * @return the $password
-	 */
-	public function getPassword() {
-		return $this->password;
-	}
-
-	/**
-	 * @return the $salt
-	 */
-	public function getSalt() {
-		return $this->salt;
-	}
-
-	/**
 	 * @return the $facebookProfile
 	 */
 	public function getFacebookProfile() {
 		return $this->facebookProfile;
-	}
-
-	/**
-	 * @param field_type $email
-	 */
-	public function setEmail($email) {
-		$this->email = $email;
-	}
-	
-	public function getUsername() {
-		return $this->email;
-	}
-
-	/**
-	 * @param field_type $password
-	 */
-	public function setPassword($password) {
-		$this->password = $password;
-	}
-	
-	public function eraseCredentials() {
-		$this->password = null;
-	}
-	
-	public function equals(UserInterface $that) {
-		return $this->email == $that->email;
-	}
-
-	/**
-	 * @param field_type $salt
-	 */
-	public function setSalt($salt) {
-		$this->salt = $salt;
 	}
 
 	/**
@@ -221,22 +210,6 @@ class UserAuth
 		$this->updateTime = $updateTime;
 	}
 
-	/**
-	 * @param $roles
-	 */
-	public function setRoles($roles)
-	{
-		$this->roles = $roles;
-	}
-
-	/**
-	 * @return $roles
-	 */
-	public function getRoles()
-	{
-		return $this->roles;
-	}
-
     /**
      * {@inheritDoc}
      */
@@ -251,13 +224,5 @@ class UserAuth
     	}
 
     	return $this->getId();
-    }
-
-    /**
-     * @mongodb:PostLoad
-     */
-	public function setReferenceOnPostLoad()
-    {
-    	// Set references
     }
 }

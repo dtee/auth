@@ -8,7 +8,8 @@
 	</div>
 {% else %}
 	{% spaceless %}
-		<a href="{{ path('acme_demo_auth_auth') }}">Login</a> / 
+		<a href="{{ path('odl_auth_auth_login') }}">Login</a> / 
+		<a href="{{ path('odl_auth_auth_register') }}">Register</a> / 
 		<a href="javascript:void(0)" onclick="fbConnect()">Facebook Connect</a>
 	{% endspaceless %}
 {% endif %}

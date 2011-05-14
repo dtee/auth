@@ -38,7 +38,7 @@ class FacebookContextListener
     }
 
 	/**
-     * Reads the SecurityContext from the session.
+     * Auto log in facebook user... is this a good idea?
      *
      * @param GetResponseEvent $event A GetResponseEvent instance
      */
