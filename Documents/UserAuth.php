@@ -38,6 +38,11 @@ class UserAuth
 	 * @assert:MaxLength(50)
 	 */
 	protected $email;
+	
+	/**
+	 * @mongodb:Field(type="boolean")
+	 */
+	protected $enabled;
 
 	/**
 	 * @mongodb:Field(type="string")
@@ -108,6 +113,11 @@ class UserAuth
 	 * @mongodb:Index
 	 */
 	protected $profile;
+	
+	/**
+	 * @mongodb:Field(type="string")
+	 */
+	protected $algorithm; 
 
 	/**
 	 * @mongodb:EmbedOne(targetDocument="FacebookProfile")
@@ -120,24 +130,26 @@ class UserAuth
 	 */
     protected $groups;
 
+    public function __construct() {
+    	parent::__construct();
+    	$this->enabled = true;
+    	$this->algorithm = 'sha512';
+    }
+    
+    public function setEmail($email){
+    	parent::setEmail($email);
+    	parent::setUsername($email);
+    }
 
 	public function getProfileImage()
 	{
-		if ($fbUid = $this->getFacebookUserId())
+		if ($this->facebookProfile && $this->facebookProfile->getFacebookUserId())
 		{
 			return "http://graph.facebook.com/{$fbUid}/picture";
 		}
 
 		// Default null image
 		return 'http://static.ak.fbcdn.net/rsrc.php/v1/yi/r/odA9sNLrE86.jpg';
-	}
-
-	/**
-	 * @param $facebookAuth
-	 */
-	public function setFacebookAuth($facebookAuth)
-	{
-		$this->facebookAuth = $facebookAuth;
 	}
 
 	/**
@@ -215,14 +227,12 @@ class UserAuth
      */
     public function __toString()
     {
-    	if ($fbAuth = $this->getFacebookAuth())
-    	{
-    		if ($profile = $fbAuth->getProfile())
-    		{
-    			return $profile->getFirstName() . ' ' . $profile->getLastName();
-    		}
-    	}
-
+    	$profile = $this->getProfile();
+    	
+ 		if ($profile) {
+			return $profile->getFirstName() . ' ' . $profile->getLastName();
+		}
+		
     	return $this->getId();
     }
 }

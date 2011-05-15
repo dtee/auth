@@ -1,10 +1,12 @@
 {% if app.user %}
-	<div class="profile_image">
-		<img src="{{ app.user.getProfileImage() }}" title="{{ app.user }}"/>
-	</div>
-	<div class="user_info smaller">
-		<div>Hi, <a href="{{ path('acme_demo_profile_profile', {'userId': app.user.getId()}) }}">{{ app.user }}</a></div>
-		<div><a href="javascript:void(0)" onclick="signout()">Logout</a></div>
+	<div class="user_profile">
+		<div class="profile_image">
+			<img src="{{ app.user.getProfileImage() }}" title="{{ app.user }}"/>
+		</div>
+		<div class="user_info smaller">
+			<div>Hi, <a href="{{ path('odl_auth_user_profile', {'userId': app.user.getId()}) }}">{{ app.user }}</a></div>
+			<div><a href="{{ path('odl_auth_auth_logout') }}">Logout</a></div>
+		</div>
 	</div>
 {% else %}
 	{% spaceless %}

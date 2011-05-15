@@ -10,11 +10,11 @@
 				It's free and always will be.
 			</div>
 		</h3>
-	    <form method="POST" id="create_user_auth" class="form" 
-	    	action="{{ path('odl_auth_auth_register') }}">
-	    	
-	        {{ form_widget(formView) }}
-	        <input type="submit" value="Login" />
+	    <form method="POST" id="create_user_auth" class="form">
+	    	<div class="clearfix">
+	      	  {{ form_widget(formView) }}
+	      	</div>
+	        <input type="submit" value="Register" />
 	    </form>
 	    
 	    <script>

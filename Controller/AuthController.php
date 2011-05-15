@@ -1,6 +1,12 @@
 <?php
 namespace Odl\AuthBundle\Controller;
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
+use Symfony\Component\Security\Core\Exception\AccountStatusException;
+
+use Symfony\Component\HttpKernel\Events;
+
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
@@ -27,6 +33,7 @@ class AuthController
 		$userManager = $this->get('fos_user.user_manager');
 		$userAuth = $userManager->createUser();
 
+		sleep(2);
 		$form = $formFactory
 			->createBuilder('form', $userAuth)
     		->add('email', 'text')
@@ -39,18 +46,26 @@ class AuthController
 			->getForm();
 
 		// Handles Success - database wise
+		$retVal = array();
 		if ($request->getMethod() == 'POST') {
 			$form->bindRequest($request);
 
 			// Creates user auth
 			if ($form->isValid()) {
 				// Handle success, lets create a user?
-
 				$userManager->updateUser($userAuth, true);
 
 		        // Log the user in
+		        $userAuth->setPlainPassword(null);	// Remove password
 				$this->authenticateUser($userAuth);
-				$retVal['href'] = '/';
+				
+				$router = $this->get('router');
+				$retVal['href'] = $router->generate('odl_shadow_main_index');
+	        }
+	        else
+	        {
+	        	$errorsProvider = $this->get('form.errors');
+	        	$retVal['error'] = $errorsProvider->getErrors($form);
 	        }
 		}
 
@@ -58,8 +73,6 @@ class AuthController
         $response = new Response();
 		if ($request->isXmlHttpRequest())
 		{
-        	$errorsProvider = $this->get('form.errors');
-        	$retVal['error'] = $errorsProvider->getErrors($form);
         	$content = json_encode($retVal);
 		}
 		else
@@ -85,17 +98,31 @@ class AuthController
 	}
 
 	/**
+	 * @extra:Route("/info")
+	 * @Template()
+	 */
+	public function info() {
+        return new Response(phpinfo());
+	}
+
+	/**
 	 * @extra:Route("/login")
 	 */
 	public function loginAction()
 	{
+		$ids = $this->container->getServiceIds();
+		sort($ids);
+	
+		$dispatcher = $this->get('event_dispatcher');
+		$listeners = $dispatcher->getListeners(Events::onCoreView);
+		
 		$formFactory = $this->get('form.factory');
 		$request = $this->get('request');
 		$userManager = $this->get('fos_user.user_manager');
 
 		$userAuth = $userManager->createUser();
 		$form = $formFactory
-			->createBuilder('form')
+			->createBuilder('form', $userAuth)
     		->add('email', 'text')
     		->add('plainPassword', 'password', array(
     			'label' => 'Password'
@@ -103,20 +130,36 @@ class AuthController
 			->getForm();
 
 		// Handles Success - database wise
+		$retVal = array();
 		if ($request->getMethod() == 'POST') {
 			$form->bindRequest($request);
 
-			$data = $form->getData();
-			ve($data);
 			// Creates user auth
 			if ($form->isValid()) {
-				// Handle success, lets create a user?
-
-				$userManager->updateUser($userAuth, true);
-
-		        // Log the user in
-				$this->authenticateUser($userAuth);
-				$retVal['href'] = '/';
+				$authManager = $this->get('security.authentication.manager');
+				
+				try {
+					$token = $this->getToken($userAuth);
+					$secureToken = $authManager->authenticate($token);
+					
+					$this->container->get('security.context')->setToken($secureToken);
+					
+					$router = $this->get('router');
+					$retVal['href'] = $router->generate('odl_shadow_main_index');
+				}
+				catch (AccountStatusException $e)
+				{
+					$retVal['error']['form_plainPassword'][] = $e->getMessage();
+				}
+				catch (\Exception $ex) 
+				{
+					$retVal['error']['form_plainPassword'][] = $ex->getMessage();
+				}
+	        }
+	        else
+	        {
+	        	$errorsProvider = $this->get('form.errors');
+	        	$retVal['error'] = array_merge($errorsProvider->getErrors($form));
 	        }
 		}
 
@@ -124,9 +167,7 @@ class AuthController
         $response = new Response();
 		if ($request->isXmlHttpRequest())
 		{
-        	$errorsProvider = $this->get('form.errors');
-        	$retVal['error'] = $errorsProvider->getErrors($form);
-        	$content = json_encode($retVal);
+	        $content = json_encode($retVal);
 		}
 		else
 		{
@@ -147,7 +188,12 @@ class AuthController
 	 * @Template()
 	 */
 	public function logoutAction() {
-
+		$this->container->get('security.context')->setToken(null);
+		$router = $this->get('router');
+		$url = $router->generate('odl_shadow_main_index');
+		
+        $response = new RedirectResponse($url);
+        return $response;
 	}
 
 	/**
@@ -155,7 +201,12 @@ class AuthController
 	 * @Template()
 	 */
 	public function forgetPasswordAction() {
-
+		$this->container->get('security.context')->setToken(null);
+		$router = $this->get('router');
+		$url = $router->generate('odl_shadow_main_index');
+		
+        $response = new RedirectResponse($url);
+        return $response;
 	}
 
     /**
@@ -167,12 +218,31 @@ class AuthController
     protected function authenticateUser(UserInterface $user, $reAuthenticate = false)
     {
         $providerKey = $this->container->getParameter('fos_user.firewall_name');
-        $token = new UsernamePasswordToken($user, null, $providerKey, $user->getRoles());
+        $token = new UsernamePasswordToken(
+        	$user,
+        	null, 
+        	$providerKey, 
+        	$user->getRoles());
 
         if (true === $reAuthenticate) {
             $token->setAuthenticated(false);
         }
-
+        
         $this->container->get('security.context')->setToken($token);
+    }
+    
+    protected function getToken(UserAuth $user, $reAuthenticate = false) {
+        $providerKey = $this->container->getParameter('fos_user.firewall_name');
+        $token = new UsernamePasswordToken(
+        	$user->getEmail(),
+        	$user->getPlainPassword(), 
+        	$providerKey, 
+        	$user->getRoles());
+
+        if (true === $reAuthenticate) {
+            $token->setAuthenticated(false);
+        }
+        
+        return $token;
     }
 }

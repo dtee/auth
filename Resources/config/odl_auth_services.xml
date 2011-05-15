@@ -15,9 +15,7 @@
 		    <parameter key="cookie">true</parameter>
 	    	<parameter key="domain"></parameter>
     	</parameter>
-    	
-    	<parameter key="security.context_listener.class">Odl\AuthBundle\Firewall\FacebookContextListener</parameter>
-	</parameters>
+   	</parameters>
 	
     <services>
         <!-- Set up user providers -->
@@ -36,23 +34,6 @@
         <service id="facebook" class="Facebook" public="true">
         	<argument>%facebook_config%</argument>
         </service> 
-        
-        <!-- Override context listener -->
-        <service id="security.context_listener" class="%security.context_listener.class%" public="false">
-            <tag name="monolog.logger" channel="security" />
-            <argument type="service" id="security.context" />
-            <argument type="collection"></argument>
-            <argument /> <!-- Provider Key -->
-            <argument type="service" id="logger" on-invalid="null" />
-            <argument type="service" id="event_dispatcher" on-invalid="null"/>
-            <argument type="service" id="facebook" on-invalid="null"/>
-            <argument type="service" id="auth.mongodb.facebook_auth_provider" />
-        </service>
-        
-        <service id="security.firewall.map" class="%security.firewall.map.class%" public="true">
-            <argument type="service" id="service_container" />
-            <argument type="collection" />
-        </service>
         
         <!-- Validators -> Check unique email -->
         <service id="auth.validator.unique.email" class="Odl\AuthBundle\Validator\Constraints\UniqueUsernamePasswordValidator">

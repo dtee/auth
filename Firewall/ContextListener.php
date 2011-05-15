@@ -66,7 +66,7 @@ class ContextListener implements ListenerInterface
         $session = $request->hasSession() ? $request->getSession() : null;
 
         if (null === $session || null === $token = $session->get('_security_'.$this->contextKey)) {
-
+        	v('got no token');
         	$this->context->setToken(null);
         } else {
             if (null !== $this->logger) {
@@ -74,7 +74,6 @@ class ContextListener implements ListenerInterface
             }
 
             $token = unserialize($token);
-
             if (null !== $token) {
                 $token = $this->refreshUser($token);
             }
