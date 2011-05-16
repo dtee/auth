@@ -9,15 +9,19 @@
 		<parameter key="auth.form.template">Odl\AuthBundle\Documents\UserAuth</parameter>
 
 		<parameter key="facebook_config">
-		    <parameter key="appId" type="string">34505942778</parameter>
-		    <!-- <parameter key="key">1487966dff468a4873b97fc4eb0ce0a5</parameter> -->
-		    <parameter key="secret">eeb486fad413e95d218073d5d6bea882</parameter>
+		    <parameter key="appId" type="string">170752334654</parameter>
+		    <parameter key="secret">4261ef8a2167c3ce7bbe8ad03d6b5361</parameter>
 		    <parameter key="cookie">true</parameter>
 	    	<parameter key="domain"></parameter>
     	</parameter>
    	</parameters>
 	
     <services>
+    	<!-- Add loggable -->
+		<service id="gedmo.loggable" class="Gedmo\Loggable\LoggableListener" public="false">
+			<tag name="doctrine.odm.mongodb.default_event_subscriber" />
+        </service>
+    
         <!-- Set up user providers -->
         <service id="auth.mongodb.facebook_auth_provider" class="Odl\AuthBundle\MongoDB\MongoDBFacebookAuthProvider" public="false">
         	<argument type="service" id="facebook"></argument>

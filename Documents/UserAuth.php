@@ -5,6 +5,7 @@ use FOS\UserBundle\Document\User;
 
 /**
  * @mongodb:Document(db="user", collection="user_auth")
+ * @mongodb:Index(keys={"facebookProfile.facebookUserId"="asc"})
  */
 class UserAuth
 	extends User

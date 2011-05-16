@@ -33,7 +33,6 @@ class AuthController
 		$userManager = $this->get('fos_user.user_manager');
 		$userAuth = $userManager->createUser();
 
-		sleep(2);
 		$form = $formFactory
 			->createBuilder('form', $userAuth)
     		->add('email', 'text')
@@ -90,11 +89,31 @@ class AuthController
 	}
 
 	/**
-	 * @extra:Route("/fb-register")
+	 * Log in as facebook user if the user already have an account
+	 * 
+	 * @extra:Route("/fb-auth")
 	 * @Template()
 	 */
-	public function fbRegister() {
-		$facebook = $this->get('facebook');
+	public function fbAuth() {
+		$facebook = $this->get('fos_facebook.api');
+		$currentToken = $this->get('security.context')->getToken();
+		$user = null;
+		if ($currentToken) {
+			if ($currentToken instanceof UsernamePasswordToken)
+			{
+				$user = $currentToken->getUser();
+			}
+		}
+		
+		// Assumes most of the auth request is done via javascript
+		if ($fbUserId = $facebook->getUser()) {
+			// Check to see if we have the user in our system
+			
+			// If the user doesn't have an account - does he want to 
+			//	create a new one or merge with existing account?
+		}
+		
+		ve($currentToken);
 	}
 
 	/**
@@ -110,9 +129,6 @@ class AuthController
 	 */
 	public function loginAction()
 	{
-		$ids = $this->container->getServiceIds();
-		sort($ids);
-	
 		$dispatcher = $this->get('event_dispatcher');
 		$listeners = $dispatcher->getListeners(Events::onCoreView);
 		

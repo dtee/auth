@@ -29,7 +29,7 @@ class MongoDBFacebookAuthProvider
 
 	public function getOrCreateUser($facebookUserId)
 	{
-		$query = array('facebookAuth.$id' => $facebookUserId);
+		$query = array('facebookProfile.facebookUserId' => $facebookUserId);
 		$userAuth = $this->repository->findOneBy($query);
 
 		if (!$userAuth)
@@ -53,38 +53,11 @@ class MongoDBFacebookAuthProvider
 
 		return $userAuth;
 	}
-
-	public function createUsernamePasswordAuth(UserAuth $userAuth)
-	{
-		if ($usernamePasswordAuth = $userAuth->getUsernamePasswordAuth())
-		{
-			return $usernamePasswordAuth;
-		}
-
-		$facebookAuth = $userAuth->getFacebookAuth();
-		if ($facebookAuth)
-		{
-			if ($facebookProfile = $facebookAuth->getProfile())
-			{
-				$facebookUserInfo = $facebookProfile->getFacebookUserInfo();
-				if (isset($facebookUserInfo['email']))
-				{
-					$email = $facebookUserInfo['email'];
-					$usernamePasswordAuth = new UsernamePasswordAuth();
-					$usernamePasswordAuth->setEmail($email);
-					$usernamePasswordAuth->setSalt(rand(1, time()));
-
-					$userAuth->setUsernamePasswordAuth($usernamePasswordAuth);
-
-					$this->dm->persist($usernamePasswordAuth);
-					$this->dm->persist($userAuth);
-					$this->dm->flush();
-
-					return $usernamePasswordAuth;
-				}
-			}
-		}
-
-		return null;
+	
+	public function getUserAuth($facebookUserId) {
+		$query = array('facebookProfile.facebookUserId' => $facebookUserId);
+		$userAuth = $this->repository->findOneBy($query);
+		
+		return $userAuth;
 	}
 }
