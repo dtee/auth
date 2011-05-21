@@ -1,10 +1,10 @@
 <?php
 namespace Odl\AuthBundle\Documents;
 
-/** 
+/**
  * @mongodb:EmbeddedDocument
  */
-class FacebookProfile 
+class FacebookProfile
 	extends Profile
 {
 	/**
@@ -18,12 +18,30 @@ class FacebookProfile
 	 * @var array
 	 */
 	protected $facebookUserInfo;
-	
+
+	/**
+	 * @mongodb:Hash
+	 */
+	protected $friends;
+
 	public function __construct(array $facebookUserInfo = array())
 	{
 		$this->setFacebookUserInfo($facebookUserInfo);
 	}
 
+	public function setFriends($friends)
+	{
+		$this->friends = $friends;
+	}
+
+	public function getFriends() {
+		return $this->friends;
+	}
+
+	public function getEmail() {
+		if (isset($this->facebookUserInfo['email']))
+			return $this->facebookUserInfo['email'];
+	}
 	/**
 	 * @return the $facebookUserInfo
 	 */

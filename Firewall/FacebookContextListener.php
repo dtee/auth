@@ -1,6 +1,8 @@
 <?php
 namespace Odl\AuthBundle\Firewall;
 
+use Odl\AuthBundle\Model\FacebookUserManager;
+
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
@@ -15,7 +17,6 @@ use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-use Odl\AuthBundle\MongoDB\MongoDBFacebookAuthProvider;
 
 class FacebookContextListener
 	extends ContextListener
@@ -29,8 +30,8 @@ class FacebookContextListener
     	$contextKey,
     	LoggerInterface $logger = null,
     	EventDispatcherInterface $dispatcher = null,
-    	\Facebook $facebook,
-		MongoDBFacebookAuthProvider $userProvider)
+    	\NewFacebook $facebook,
+		FacebookUserManager $userProvider)
     {
         parent::__construct($context, $userProviders, $contextKey, $logger, $dispatcher);
         $this->facebook = $facebook;
@@ -47,15 +48,17 @@ class FacebookContextListener
 		if ($fbUserId = $this->facebook->getUser())
 		{
 			// Look for the facebook user using providers
-			$userAuth = $this->userProvider->getOrCreateUser($fbUserId);
+			$userAuth = $this->userProvider->createOrGetUser($fbUserId);
 
 			if (!$userAuth)
 			{
 				$this->logger->debug(sprintf("No user auth for {$fbUserId} - did not give us permission?"));
 			}
-
-			// Facebook user don't need to authentication (authenticationManager)
-			$this->context->setToken(new FacebookUserToken($userAuth));
+			else
+			{
+				// Facebook user don't need to authentication (authenticationManager)
+				$this->context->setToken(new FacebookUserToken($userAuth));
+			}
 
 			if (null !== $this->logger)
 			{

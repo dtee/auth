@@ -31,7 +31,7 @@ class UserAuth
 
 	/**
 	 * @mongodb:Field(type="string")
-	 * @mongodb:UniqueIndex()
+	 * @mongodb:Index()
 	 *
 	 * @assert:NotBlank()
 	 * @assert:Email()
@@ -39,7 +39,7 @@ class UserAuth
 	 * @assert:MaxLength(50)
 	 */
 	protected $email;
-	
+
 	/**
 	 * @mongodb:Field(type="boolean")
 	 */
@@ -72,7 +72,7 @@ class UserAuth
 	protected $salt;
 
 	/**
-	 * @mongodb:Field(type="collection")
+	 * @mongodb:Field(type="hash")
 	 * @assert:NotBlank()
 	 */
 	protected $roles;
@@ -111,23 +111,21 @@ class UserAuth
 
 	/**
 	 * @mongodb:EmbedOne(targetDocument="Profile")
-	 * @mongodb:Index
 	 */
 	protected $profile;
-	
+
 	/**
 	 * @mongodb:Field(type="string")
 	 */
-	protected $algorithm; 
+	protected $algorithm;
 
 	/**
 	 * @mongodb:EmbedOne(targetDocument="FacebookProfile")
-	 * @mongodb:Index
 	 */
 	protected $facebookProfile;
 
 	/**
-	 * @mongodb:Field(type="collection")
+	 * @mongodb:Field(type="hash")
 	 */
     protected $groups;
 
@@ -135,8 +133,10 @@ class UserAuth
     	parent::__construct();
     	$this->enabled = true;
     	$this->algorithm = 'sha512';
+    	$this->groups = array();
+    	$this->roles = array();
     }
-    
+
     public function setEmail($email){
     	parent::setEmail($email);
     	parent::setUsername($email);
@@ -144,9 +144,9 @@ class UserAuth
 
 	public function getProfileImage()
 	{
-		if ($this->facebookProfile && $this->facebookProfile->getFacebookUserId())
+		if ($this->facebookProfile)
 		{
-			return "http://graph.facebook.com/{$fbUid}/picture";
+			return "http://graph.facebook.com/{$this->facebookProfile->getFacebookUserId()}/picture";
 		}
 
 		// Default null image
@@ -223,17 +223,35 @@ class UserAuth
 		$this->updateTime = $updateTime;
 	}
 
+	public function getFirstName() {
+		if ($this->facebookProfile)
+		{
+			$profile = $this->facebookProfile;
+		}
+		else {
+    		$profile = $this->getProfile();
+		}
+
+		return $profile->getFirstName();
+	}
+
     /**
      * {@inheritDoc}
      */
     public function __toString()
     {
-    	$profile = $this->getProfile();
-    	
+		if ($this->facebookProfile)
+		{
+			$profile = $this->facebookProfile;
+		}
+		else {
+    		$profile = $this->getProfile();
+		}
+
  		if ($profile) {
 			return $profile->getFirstName() . ' ' . $profile->getLastName();
 		}
-		
+
     	return $this->getId();
     }
 }
