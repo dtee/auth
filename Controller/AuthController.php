@@ -1,6 +1,8 @@
 <?php
 namespace Odl\AuthBundle\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Symfony\Component\Security\Core\Exception\AccountStatusException;
@@ -22,7 +24,7 @@ class AuthController
 	extends Controller
 {
 	/**
-	 * @extra:Route("/register/")
+	 * @Route("/register/")
 	 */
 	public function registerAction()
 	{
@@ -57,7 +59,7 @@ class AuthController
 		        // Log the user in
 		        $userAuth->setPlainPassword(null);	// Remove password
 				$this->authenticateUser($userAuth);
-				
+
 				$router = $this->get('router');
 				$retVal['href'] = $router->generate('odl_shadow_main_index');
 	        }
@@ -90,8 +92,8 @@ class AuthController
 
 	/**
 	 * Log in as facebook user if the user already have an account
-	 * 
-	 * @extra:Route("/fb-auth")
+	 *
+	 * @Route("/fb-auth")
 	 * @Template()
 	 */
 	public function fbAuth() {
@@ -104,20 +106,20 @@ class AuthController
 				$user = $currentToken->getUser();
 			}
 		}
-		
+
 		// Assumes most of the auth request is done via javascript
 		if ($fbUserId = $facebook->getUser()) {
 			// Check to see if we have the user in our system
-			
-			// If the user doesn't have an account - does he want to 
+
+			// If the user doesn't have an account - does he want to
 			//	create a new one or merge with existing account?
 		}
-		
+
 		ve($currentToken);
 	}
 
 	/**
-	 * @extra:Route("/info")
+	 * @Route("/info")
 	 * @Template()
 	 */
 	public function info() {
@@ -125,13 +127,13 @@ class AuthController
 	}
 
 	/**
-	 * @extra:Route("/login")
+	 * @Route("/login")
 	 */
 	public function loginAction()
 	{
 		$dispatcher = $this->get('event_dispatcher');
 		$listeners = $dispatcher->getListeners(Events::onCoreView);
-		
+
 		$formFactory = $this->get('form.factory');
 		$request = $this->get('request');
 		$userManager = $this->get('fos_user.user_manager');
@@ -153,13 +155,13 @@ class AuthController
 			// Creates user auth
 			if ($form->isValid()) {
 				$authManager = $this->get('security.authentication.manager');
-				
+
 				try {
 					$token = $this->getToken($userAuth);
 					$secureToken = $authManager->authenticate($token);
-					
+
 					$this->container->get('security.context')->setToken($secureToken);
-					
+
 					$router = $this->get('router');
 					$retVal['href'] = $router->generate('odl_shadow_main_index');
 				}
@@ -167,7 +169,7 @@ class AuthController
 				{
 					$retVal['error']['form_plainPassword'][] = $e->getMessage();
 				}
-				catch (\Exception $ex) 
+				catch (\Exception $ex)
 				{
 					$retVal['error']['form_plainPassword'][] = $ex->getMessage();
 				}
@@ -200,27 +202,27 @@ class AuthController
 	}
 
 	/**
-	 * @extra:Route("/logout")
+	 * @Route("/logout")
 	 * @Template()
 	 */
 	public function logoutAction() {
 		$this->container->get('security.context')->setToken(null);
 		$router = $this->get('router');
 		$url = $router->generate('odl_shadow_main_index');
-		
+
         $response = new RedirectResponse($url);
         return $response;
 	}
 
 	/**
-	 * @extra:Route("/password-recover")
+	 * @Route("/password-recover")
 	 * @Template()
 	 */
 	public function forgetPasswordAction() {
 		$this->container->get('security.context')->setToken(null);
 		$router = $this->get('router');
 		$url = $router->generate('odl_shadow_main_index');
-		
+
         $response = new RedirectResponse($url);
         return $response;
 	}
@@ -236,29 +238,29 @@ class AuthController
         $providerKey = $this->container->getParameter('fos_user.firewall_name');
         $token = new UsernamePasswordToken(
         	$user,
-        	null, 
-        	$providerKey, 
+        	null,
+        	$providerKey,
         	$user->getRoles());
 
         if (true === $reAuthenticate) {
             $token->setAuthenticated(false);
         }
-        
+
         $this->container->get('security.context')->setToken($token);
     }
-    
+
     protected function getToken(UserAuth $user, $reAuthenticate = false) {
         $providerKey = $this->container->getParameter('fos_user.firewall_name');
         $token = new UsernamePasswordToken(
         	$user->getEmail(),
-        	$user->getPlainPassword(), 
-        	$providerKey, 
+        	$user->getPlainPassword(),
+        	$providerKey,
         	$user->getRoles());
 
         if (true === $reAuthenticate) {
             $token->setAuthenticated(false);
         }
-        
+
         return $token;
     }
 }

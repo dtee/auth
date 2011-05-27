@@ -1,131 +1,137 @@
 <?php
 namespace Odl\AuthBundle\Documents;
+
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 use Symfony\Component\Security\Core\User\UserInterface;
 use FOS\UserBundle\Document\User;
 
 /**
- * @mongodb:Document(db="user", collection="user_auth")
- * @mongodb:Index(keys={"facebookProfile.facebookUserId"="asc"})
+ * @ODM\Document(db="user", collection="user_auth")
+ * @ODM\Index(keys={"facebookProfile.facebookUserId"="asc"})
  */
 class UserAuth
 	extends User
 {
 	/**
-	 * @mongodb:Id
+	 * @ODM\Id
 	 */
 	protected $id;
 
 	/**
-	 * @mongodb:Field(type="string")
-	 * @mongodb:UniqueIndex()
+	 * @ODM\Field(type="string")
+	 * @ODM\UniqueIndex()
 	 *
-	 * @assert:MinLength(6)
-	 * @assert:MaxLength(50)
+	 * @Assert\MinLength(6)
+	 * @Assert\MaxLength(50)
 	 */
 	protected $username;
 
 	/**
-	 * @mongodb:Field(type="string")
+	 * @ODM\Field(type="string")
 	 */
     protected $usernameCanonical;
 
 	/**
-	 * @mongodb:Field(type="string")
-	 * @mongodb:Index()
+	 * @ODM\Field(type="string")
+	 * @ODM\UniqueIndex()
 	 *
-	 * @assert:NotBlank()
-	 * @assert:Email()
-	 * @assert:MinLength(6)
-	 * @assert:MaxLength(50)
+	 * @Assert\NotBlank()
+	 * @Assert\Email()
+	 * @Assert\MinLength(6)
+	 * @Assert\MaxLength(50)
 	 */
 	protected $email;
 
 	/**
-	 * @mongodb:Field(type="boolean")
+	 * @ODM\Field(type="boolean")
 	 */
 	protected $enabled;
 
 	/**
-	 * @mongodb:Field(type="string")
+	 * @ODM\Field(type="string")
 	 */
     protected $emailCanonical;
 
 	/**
-	 * @mongodb:Field(type="string")
+	 * @ODM\Field(type="string")
 	 */
 	protected $password;
 
 	/**
-	 * @mongodb:NotSaved
+	 * @ODM\NotSaved
 	 *
-	 * @assert:NotBlank()
-	 * @assert:MinLength(6)
-	 * @assert:MaxLength(20)
+	 * @Assert\NotBlank()
+	 * @Assert\MinLength(6)
+	 * @Assert\MaxLength(20)
 	 */
 	protected $plainPassword;
 
 	/**
-	 * @mongodb:Field(type="string")
+	 * @ODM\Field(type="string")
 	 *
-	 * @assert:NotBlank
+	 * @Assert\NotBlank
 	 */
 	protected $salt;
 
 	/**
-	 * @mongodb:Field(type="hash")
-	 * @assert:NotBlank()
+	 * @ODM\Field(type="collection")
+	 * @Assert\NotBlank()
 	 */
 	protected $roles;
 
 	/**
-	 * @mongodb:Field(type="date")
+	 * @ODM\Field(type="date")
 	 */
 	protected $expiresAt;
 
 	/**
-	 * @mongodb:Field(type="boolean")
+	 * @ODM\Field(type="boolean")
 	 */
 	protected $expired;
 
 	/**
-	 * @mongodb:Field(type="date")
+	 * @ODM\Field(type="date")
 	 * @gedmo:Timestampable(on="create")
 	 */
 	protected $createdAt;
 
 	/**
-	 * @mongodb:Field(type="date")
+	 * @ODM\Field(type="date")
 	 * @gedmo:Timestampable(on="update")
 	 */
 	protected $updatedAt;
 
 	/**
-	 * @mongodb:Field(type="boolean")
+	 * @ODM\Field(type="boolean")
 	 */
     protected $credentialsExpired;
 
 	/**
-	 * @mongodb:Field(type="date")
+	 * @ODM\Field(type="date")
 	 */
     protected $credentialsExpireAt;
 
 	/**
-	 * @mongodb:EmbedOne(targetDocument="Profile")
+	 * @ODM\EmbedOne(targetDocument="Profile")
+	 * @ODM\Index
 	 */
 	protected $profile;
 
 	/**
-	 * @mongodb:Field(type="string")
+	 * @ODM\Field(type="string")
 	 */
 	protected $algorithm;
 
 	/**
-	 * @mongodb:EmbedOne(targetDocument="FacebookProfile")
+	 * @ODM\EmbedOne(targetDocument="FacebookProfile")
+	 * @ODM\Index
 	 */
 	protected $facebookProfile;
 
 	/**
-	 * @mongodb:Field(type="hash")
+	 * @ODM\Field(type="collection")
 	 */
     protected $groups;
 
