@@ -4,7 +4,7 @@ namespace Odl\AuthBundle\Model;
 use Odl\AuthBundle\Documents\FacebookProfile;
 use Odl\AuthBundle\Documents\UserAuth;
 use Doctrine\ODM\MongoDB\DocumentManager;
-use NewFacebook;
+use Facebook;
 
 class FacebookUserManager {
 	private $dm;
@@ -13,7 +13,7 @@ class FacebookUserManager {
 
 	public function __construct(
 		DocumentManager $dm,
-		NewFacebook $facebook) {
+		Facebook $facebook) {
 
 
 		$this->dm = $dm;

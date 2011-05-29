@@ -37,7 +37,7 @@
         </service>
         
         <!-- Set up facebook API class -->
-        <service id="facebook" class="NewFacebook" public="true">
+        <service id="facebook" class="Facebook" public="true">
         	<argument>%facebook_config%</argument>
         </service> 
         

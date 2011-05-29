@@ -30,7 +30,7 @@ class FacebookContextListener
     	$contextKey,
     	LoggerInterface $logger = null,
     	EventDispatcherInterface $dispatcher = null,
-    	\NewFacebook $facebook,
+    	\Facebook $facebook,
 		FacebookUserManager $userProvider)
     {
         parent::__construct($context, $userProviders, $contextKey, $logger, $dispatcher);
