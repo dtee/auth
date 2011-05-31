@@ -9,7 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-use JMS\SecurityExtraBundle\Annotation\Secure
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 class UserController
 	extends Controller
