@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+	
+    <services>
+        <!-- Grids -->
+        <service id="grid.source.user_auth" class="Dtc\GridBundle\Grid\Source\DocumentGridSource" public="true">
+            <argument type="service" id="doctrine.odm.mongodb.default_document_manager"></argument>
+            <argument>Odl\AuthBundle\Documents\UserAuth</argument>
+            <argument>grid.source.user_auth</argument>
+            <call method="removeColumn">
+             	<argument>password</argument>
+             	<argument>salt</argument>
+             	<argument>groups</argument>
+             	<argument>id</argument>
+             	<argument>usernameCanonical</argument>
+             	<argument>emailCanonical</argument>
+             	<argument>plainPassword</argument>
+             	<argument>expired</argument>
+        	</call>
+        </service>
+    </services>
+</container>

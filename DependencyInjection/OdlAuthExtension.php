@@ -1,6 +1,7 @@
 <?php
 namespace Odl\AuthBundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -13,8 +14,7 @@ class OdlAuthExtension
     {
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('odl_auth_services.xml');
-
-        // Lets set up
+        $loader->load('grid.xml');
     }
 
     public function getAlias()

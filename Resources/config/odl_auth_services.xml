@@ -7,13 +7,6 @@
 	<parameters>
 		<parameter key="auth.userauth">Odl\AuthBundle\Documents\UserAuth</parameter>
 		<parameter key="auth.form.template">Odl\AuthBundle\Documents\UserAuth</parameter>
-
-		<parameter key="facebook_config"  type="collection">
-		    <parameter key="appId" type="string">218531228165718</parameter>
-		    <parameter key="secret">4172406752415be8ec611b790739b420</parameter>
-		    <parameter key="cookie">true</parameter>
-	    	<parameter key="domain"></parameter>
-    	</parameter>
     	
     	<parameter key="security.context_listener.class">Odl\AuthBundle\Firewall\FacebookContextListener</parameter>
    	</parameters>
@@ -25,22 +18,12 @@
         </service>
     
         <!-- Set up user providers -->
-        <service id="auth.mongodb.facebook_auth_provider" class="Odl\AuthBundle\MongoDB\MongoDBFacebookAuthProvider" public="false">
-        	<argument type="service" id="facebook"></argument>
-        	<argument type="service" id="doctrine.odm.mongodb.default_document_manager"></argument>
-        	<argument>%auth.userauth%</argument>
-        </service>
-        
         <service id="auth.mongodb.username_password_provider" class="Odl\AuthBundle\MongoDB\MongoDBUserProvider" public="true">
             <argument type="service" id="doctrine.odm.mongodb.default_document_manager" />
             <argument>%auth.userauth%</argument>
         </service>
         
         <!-- Set up facebook API class -->
-        <service id="facebook" class="Facebook" public="true">
-        	<argument>%facebook_config%</argument>
-        </service> 
-        
         <service id="auth.facebook_user_manager" class="Odl\AuthBundle\Model\FacebookUserManager" public="true">
         	<argument type="service" id="doctrine.odm.mongodb.default_document_manager"></argument>
         	<argument type="service" id="facebook"></argument>
@@ -62,13 +45,8 @@
             <argument type="service" id="logger" on-invalid="null" />
             <argument type="service" id="event_dispatcher" on-invalid="null"/>
             
-            <argument type="service" id="facebook"/>
+            <argument type="service" id="fos_facebook.api"/>
             <argument type="service" id="auth.facebook_user_manager" />
         </service>
-		
-        <service id="auth.validator.unique.facebook_user" class="Odl\AuthBundle\Validator\Constraints\UniqueFacebookUserValidator">
-		    <argument type="service" id="auth.mongodb.facebook_auth_provider" />
-		    <tag name="validator.constraint_validator" alias="auth_unique_facebookuser" />
-		</service>
     </services>
 </container>

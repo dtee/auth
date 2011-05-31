@@ -1,24 +1,29 @@
 <?php
 namespace Odl\AuthBundle\Documents;
 
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 /**
- * @mongodb:EmbeddedDocument
+ * @ODM\EmbeddedDocument
  */
 class Profile
 {
 	/**
-	 * @mongodb:String
-	 * @assert:NotBlank
-	 * @assert:MinLength(2)
-	 * @assert:MaxLength(25)
+	 * @ODM\String
+	 *
+	 * @Assert\NotBlank
+	 * @Assert\MinLength(2)
+	 * @Assert\MaxLength(25)
 	 */
 	protected $firstName;
 
 	/**
-	 * @mongodb:String
-	 * @assert:NotBlank
-	 * @assert:MinLength(2)
-	 * @assert:MaxLength(25)
+	 * @ODM\String
+	 *
+	 * @Assert\NotBlank
+	 * @Assert\MinLength(2)
+	 * @Assert\MaxLength(25)
 	 */
 	protected $lastName;
 
@@ -52,5 +57,9 @@ class Profile
 	public function setLastName($lastName)
 	{
 		$this->lastName = $lastName;
+	}
+
+	public function __toString() {
+	    return $this->firstName . ' ' . $this->lastName;
 	}
 }

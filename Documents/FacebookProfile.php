@@ -1,26 +1,28 @@
 <?php
 namespace Odl\AuthBundle\Documents;
 
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 /**
- * @mongodb:EmbeddedDocument
+ * @ODM\EmbeddedDocument
  */
 class FacebookProfile
 	extends Profile
 {
 	/**
-	 * @mongodb:String
-	 * @assert:NotBlank
+	 * @ODM\String
+	 * @Assert\NotBlank
 	 */
 	protected $facebookUserId;
 
 	/**
-	 * @mongodb:Hash
-	 * @var array
+	 * @ODM\Hash
 	 */
 	protected $facebookUserInfo;
 
 	/**
-	 * @mongodb:Hash
+	 * @ODM\Hash
 	 */
 	protected $friends;
 

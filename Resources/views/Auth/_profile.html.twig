@@ -5,13 +5,15 @@
 		</div>
 		<div class="user_info smaller">
 			<div>Hi, <a href="{{ path('odl_auth_user_profile', {'userId': app.user.getId()}) }}">{{ app.user }}</a></div>
-			<div><a href="{{ path('odl_auth_auth_logout') }}">Logout</a></div>
+			<div><a href="javascript:void(0)" onclick="auth.logout()">Logout</a></div>
 		</div>
 	</div>
 {% else %}
 	{% spaceless %}
+{#
 		<a href="{{ path('odl_auth_auth_login') }}">Login</a> / 
 		<a href="{{ path('odl_auth_auth_register') }}">Register</a> / 
-		<a href="javascript:void(0)" onclick="fbConnect()">Facebook Connect</a>
+#}
+		<a href="javascript:void(0)" onclick="auth.fbLogin()">Facebook Connect</a>
 	{% endspaceless %}
 {% endif %}

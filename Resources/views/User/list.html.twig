@@ -1,7 +1,7 @@
 {% extends g_layout ? g_layout : ":layout.html.twig" %}
 
-{% block title "Profile settings" %}
+{% block title "User List" %}
 
 {% block content %}
-	{{ auth | raw }}
+	{{ grid.render() | raw }}
 {% endblock %}

@@ -1,4 +1,4 @@
-{% extends "ShadowBundle::layout.html.twig" %}
+{% extends g_layout ? g_layout : ":layout.html.twig" %}
 
 {% block title "Login" %}
 
