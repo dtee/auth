@@ -1,6 +1,7 @@
 <?php
 namespace Odl\AuthBundle\Documents;
 
+use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -93,13 +94,13 @@ class UserAuth
 
 	/**
 	 * @ODM\Field(type="date")
-	 * @gedmo:Timestampable(on="create")
+	 * @Gedmo\Timestampable(on="create")
 	 */
 	protected $createdAt;
 
 	/**
 	 * @ODM\Field(type="date")
-	 * @gedmo:Timestampable(on="update")
+	 * @Gedmo\Timestampable(on="update")
 	 */
 	protected $updatedAt;
 
