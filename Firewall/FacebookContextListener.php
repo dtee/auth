@@ -52,7 +52,8 @@ class FacebookContextListener
 
 			if (!$userAuth)
 			{
-				$this->logger->debug(sprintf("No user auth for {$fbUserId} - did not give us permission?"));
+			    if ($this->logger)
+				    $this->logger->debug(sprintf("No user auth for {$fbUserId} - did not give us permission?"));
 			}
 			else
 			{
