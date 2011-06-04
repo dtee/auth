@@ -12,7 +12,7 @@ auth.fbLogin = function() {
 			// user is not logged in
 		}
 	}, {
-		perms : 'read_stream,publish_stream,offline_access'
+		perms : 'read_stream,publish_stream,offline_access,email'
 	});
 }
 
@@ -22,5 +22,4 @@ auth.logout = function() {
 		// Redirect to log 
 	});
 }
-
 
