@@ -23,6 +23,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class AuthController
 	extends Controller
 {
+    /**
+     * @Route("")
+     */
+    public function indexAction() {
+        ve('blah');
+    }
+
 	/**
 	 * @Route("/register/")
 	 */
@@ -131,9 +138,6 @@ class AuthController
 	 */
 	public function loginAction()
 	{
-		$dispatcher = $this->get('event_dispatcher');
-		$listeners = $dispatcher->getListeners(Events::onCoreView);
-
 		$formFactory = $this->get('form.factory');
 		$request = $this->get('request');
 		$userManager = $this->get('fos_user.user_manager');

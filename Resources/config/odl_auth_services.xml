@@ -7,16 +7,9 @@
 	<parameters>
 		<parameter key="auth.userauth">Odl\AuthBundle\Documents\UserAuth</parameter>
 		<parameter key="auth.form.template">Odl\AuthBundle\Documents\UserAuth</parameter>
-    	
-    	<parameter key="security.context_listener.class">Odl\AuthBundle\Firewall\FacebookContextListener</parameter>
-   	</parameters>
+    </parameters>
 	
     <services>
-    	<!-- Add loggable -->
-		<service id="gedmo.loggable" class="Gedmo\Loggable\LoggableListener" public="false">
-			<tag name="doctrine.odm.mongodb.default_event_subscriber" />
-        </service>
-    
         <!-- Set up user providers -->
         <service id="auth.mongodb.username_password_provider" class="Odl\AuthBundle\MongoDB\MongoDBUserProvider" public="true">
             <argument type="service" id="doctrine.odm.mongodb.default_document_manager" />
@@ -36,17 +29,5 @@
 		    <tag name="validator.constraint_validator" alias="auth_unique_username_password" />
 		</service>
 		
-		<!-- Override context listener -->
-        <service id="security.context_listener" class="%security.context_listener.class%" public="false">
-            <tag name="monolog.logger" channel="security" />
-            <argument type="service" id="security.context" />
-            <argument type="collection"></argument>
-            <argument /> <!-- Provider Key -->
-            <argument type="service" id="logger" on-invalid="null" />
-            <argument type="service" id="event_dispatcher" on-invalid="null"/>
-            
-            <argument type="service" id="fos_facebook.api"/>
-            <argument type="service" id="auth.facebook_user_manager" />
-        </service>
     </services>
 </container>
