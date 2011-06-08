@@ -2,11 +2,6 @@
 namespace Odl\AuthBundle\Firewall;
 
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
-
-use Acme\DemoBundle\Documents\FacebookAuth;
-
-use Acme\DemoBundle\Documents\UserAuth;
-
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 
 class FacebookUserToken
@@ -21,8 +16,6 @@ class FacebookUserToken
 
     public function unserialize($serialized)
     {
-		$userAuth = new UserAuth();
-		$fbAuth = new FacebookAuth();
     	parent::unserialize($serialized);
     }
 

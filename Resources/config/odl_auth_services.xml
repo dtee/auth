@@ -22,6 +22,14 @@
         	<argument type="service" id="facebook"></argument>
         </service> 
         
+        <service id="auth.facebook" class="Odl\AuthBundle\Listener\AuthRequestListener" public="true">
+        	<tag name="kernel.listener" event="core.request" method="onCoreRequest" priority="63" />
+        	
+        	<argument type="service" id="security.context" />
+        	<argument type="service" id="facebook"></argument>
+        	<argument type="service" id="auth.facebook_user_manager"></argument>
+        	<argument type="service" id="logger" on-invalid="null" />
+        </service> 
         
         <!-- Validators -> Check unique email -->
         <service id="auth.validator.unique.email" class="Odl\AuthBundle\Validator\Constraints\UniqueUsernamePasswordValidator">
