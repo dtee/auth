@@ -14,6 +14,22 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 class UserController
 	extends Controller
 {
+    /**
+     * @Route("test")
+     */
+    public function testAction() {
+		$fbUserManager = $this->get('auth.facebook_user_manager');
+		$userAuth = $fbUserManager->createOrGetUser('663694611');
+
+		if ($profile = $userAuth->getFacebookProfile()) {
+		    foreach ($profile->getFriends() as $friendInfo)
+		    {
+		        $fbUserManager->createOrGetUser($friendInfo['id']);
+		        v($friendInfo);
+		        flush();
+		    }
+		}
+    }
 
 	/**
 	 * @Route("/profile/{userId}")

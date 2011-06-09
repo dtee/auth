@@ -36,7 +36,6 @@ class UserAuth
 
 	/**
 	 * @ODM\Field(type="string")
-	 * @ODM\UniqueIndex()
 	 *
 	 * @Assert\NotBlank()
 	 * @Assert\Email()
