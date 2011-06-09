@@ -20,6 +20,9 @@
              	<argument>plainPassword</argument>
              	<argument>expired</argument>
         	</call>
+            <call method="setLimit">
+             	<argument>25</argument>
+        	</call>
         </service>
     </services>
 </container>

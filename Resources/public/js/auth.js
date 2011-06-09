@@ -14,12 +14,12 @@ auth.fbLogin = function() {
 	}, {
 		perms : 'read_stream,publish_stream,offline_access,email'
 	});
-}
+};
 
 auth.logout = function() {
 	FB.logout(function(response) {
 		window.location.reload();
 		// Redirect to log 
 	});
-}
+};
 
