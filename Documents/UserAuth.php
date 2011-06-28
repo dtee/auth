@@ -4,6 +4,7 @@ namespace Odl\AuthBundle\Documents;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
+use FOS\UserBundle\Validator as AssertUser;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 use FOS\UserBundle\Document\User;
@@ -11,6 +12,7 @@ use FOS\UserBundle\Document\User;
 /**
  * @ODM\Document(db="user", collection="user_auth")
  * @ODM\Index(keys={"facebookProfile.facebookUserId"="asc"})
+ * @AssertUser\Unique(message="email already exists",property="email")
  */
 class UserAuth extends User
 {
