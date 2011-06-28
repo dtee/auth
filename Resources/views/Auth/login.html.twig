@@ -3,21 +3,22 @@
 {% block title "Login" %}
 
 {% block content %}
-	<div class="login auth">
-		<h3>
-			Login with your account
-		</h3>
-	    <form method="POST" id="login_user_auth" class="form" 
-	    	action="{{ path('odl_auth_auth_login') }}">
-	    	
-	        {{ form_widget(formView) }}
-	        <input type="submit" value="Register" />
-	    </form>
-	    
-	    <script>
-	    $(document).ready(function() {
-	    	$('#login_user_auth').ajaxForm();
-	    });
-	    </script>
+    <div class="login auth">
+        <h3>
+            Login with your account
+        </h3>
+        <form method="POST" id="login_user_auth" class="form" 
+            action="{{ path('odl_auth_auth_login') }}">
+            
+            {{ form_widget(formView) }}
+            <input type="submit" value="Register" />
+        </form>
+        
+        <a href="javascript:void(0)" onclick="auth.resetPassword()">Reset password</a>
+        <script>
+        $(document).ready(function() {
+            $('#login_user_auth').ajaxForm();
+        });
+        </script>
     </div>
 {% endblock %}

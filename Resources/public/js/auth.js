@@ -23,3 +23,21 @@ auth.logout = function() {
 	});
 };
 
+auth.resetPassword = function() {
+	var reset = function() {
+		alert('resetting password');
+	};
+	
+    $( "#dialog-confirm" ).dialog({
+        resizable: false,
+        height:220,
+        width: 380,
+        modal: true,
+        buttons: {
+            "Request password": reset,
+            Cancel: function() {
+                $( this ).dialog( "close" );
+            }
+        }
+    });
+};
