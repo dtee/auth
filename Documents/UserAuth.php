@@ -12,7 +12,11 @@ use FOS\UserBundle\Document\User;
 /**
  * @ODM\Document(db="user", collection="user_auth")
  * @ODM\Index(keys={"facebookProfile.facebookUserId"="asc"})
- * @AssertUser\Unique(message="email already exists",property="email")
+ *
+ * @AssertUser\Unique(
+ *     message="email already exists",
+ *     property="email",
+ *     groups={"registration"})
  */
 class UserAuth extends User
 {
@@ -40,8 +44,6 @@ class UserAuth extends User
      *
      * @Assert\NotBlank()
      * @Assert\Email()
-     * @Assert\MinLength(6)
-     * @Assert\MaxLength(50)
      */
     protected $email;
 
