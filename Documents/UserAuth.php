@@ -73,6 +73,21 @@ class UserAuth extends User
 
     /**
      * @ODM\Field(type="string")
+     */
+    protected $confirmationToken;
+
+    /**
+     * @ODM\Field(type="date")
+     */
+    protected $passwordRequestedAt;
+
+    /**
+     * @ODM\Field(type="collection")
+     */
+    protected $groups;
+
+    /**
+     * @ODM\Field(type="string")
      *
      * @Assert\NotBlank
      */
@@ -133,12 +148,7 @@ class UserAuth extends User
      */
     protected $facebookProfile;
 
-    /**
-     * @ODM\Field(type="collection")
-     */
-    protected $groups;
-
-    public function __construct()
+	public function __construct()
     {
         parent::__construct();
         $this->enabled = true;
