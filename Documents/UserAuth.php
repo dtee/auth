@@ -65,9 +65,9 @@ class UserAuth extends User
     /**
      * @ODM\NotSaved
      *
-     * @Assert\NotBlank()
-     * @Assert\MinLength(6)
-     * @Assert\MaxLength(20)
+     * @Assert\NotBlank(groups={"registration","reset"})
+     * @Assert\MinLength(limit="6", groups={"registration","reset"})
+     * @Assert\MaxLength(limit="20", groups={"registration","reset"})
      */
     protected $plainPassword;
 
@@ -313,6 +313,11 @@ class UserAuth extends User
         if ($firstname && $lastname) {
             return $firstname . ' ' . $lastname;
         }
+    }
+
+    public function generateConfirmationToken()
+    {
+        $this->confirmationToken = $this->generateToken();
     }
 
     /**
