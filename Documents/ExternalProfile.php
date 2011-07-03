@@ -45,6 +45,22 @@ class ExternalProfile
     }
 
     /**
+     * @return the $oauth
+     */
+    public function getOauth()
+    {
+        return $this->oauth;
+    }
+
+	/**
+     * @param field_type $oauth
+     */
+    public function setOauth($oauth)
+    {
+        $this->oauth = $oauth;
+    }
+
+	/**
      * @param field_type $userInfo
      */
     public function setUserInfo($userInfo)
