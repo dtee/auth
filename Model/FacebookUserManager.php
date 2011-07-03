@@ -5,6 +5,7 @@ use Odl\AuthBundle\Documents\FacebookProfile;
 use Odl\AuthBundle\Documents\UserAuth;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Facebook;
+use Exception;
 
 class FacebookUserManager
 {
@@ -81,33 +82,26 @@ class FacebookUserManager
             'access_token' => $this->facebook->getAccessToken()
         );
 
-        try
-        {
-            $fbResponse = $this->facebook->api('/?batch', 'POST', $fbRequest);
+        $fbResponse = $this->facebook->api('/?batch', 'POST', $fbRequest);
 
-            $profile = new FacebookProfile();
-            foreach (array_keys($request) as $index => $key) {
-                if ($fbResponse[$index]['code'] != 200) {
-                    // Log error and continue
-                    continue;
-                }
-
-                $data = json_decode($fbResponse[$index]['body'], true);
-                if ($key == 'info') {
-                    $profile->setFacebookUserInfo($data);
-                }
-                else if ($key == 'friends') {
-                    $data = isset($data['data']) ? $data['data'] : array();
-                    $profile->setFriends($data);
-                }
+        $profile = new FacebookProfile();
+        foreach (array_keys($request) as $index => $key) {
+            if ($fbResponse[$index]['code'] != 200) {
+                // Log error and continue
+                continue;
             }
 
-            return $profile;
+            $data = json_decode($fbResponse[$index]['body'], true);
+            if ($key == 'info') {
+                $profile->setFacebookUserInfo($data);
+            }
+            else if ($key == 'friends') {
+                $data = isset($data['data']) ? $data['data'] : array();
+                $profile->setFriends($data);
+            }
         }
-        catch (Exception $e)
-        {
-            // Facebook is down??
-        }
+
+        return $profile;
 
         return null;
     }

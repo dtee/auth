@@ -148,6 +148,50 @@ class UserAuth extends User
      */
     protected $facebookProfile;
 
+    /**
+     * @ODM\EmbedOne(targetDocument="LinkedInProfile")
+     * @ODM\Index
+     */
+    protected $linkedInProfile;
+
+    /**
+     * @ODM\EmbedOne(targetDocument="TwitterProfile")
+     * @ODM\Index
+     */
+    protected $twitterProfile;
+
+	/**
+     * @return the $linkedInProfile
+     */
+    public function getLinkedInProfile()
+    {
+        return $this->linkedInProfile;
+    }
+
+	/**
+     * @return the $twitterProfile
+     */
+    public function getTwitterProfile()
+    {
+        return $this->twitterProfile;
+    }
+
+	/**
+     * @param field_type $linkedInProfile
+     */
+    public function setLinkedInProfile($linkedInProfile)
+    {
+        $this->linkedInProfile = $linkedInProfile;
+    }
+
+	/**
+     * @param field_type $twitterProfile
+     */
+    public function setTwitterProfile($twitterProfile)
+    {
+        $this->twitterProfile = $twitterProfile;
+    }
+
 	public function __construct()
     {
         parent::__construct();
