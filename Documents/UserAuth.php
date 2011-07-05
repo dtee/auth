@@ -12,6 +12,7 @@ use FOS\UserBundle\Document\User;
 /**
  * @ODM\Document(db="user", collection="user_auth")
  * @ODM\Index(keys={"facebookProfile.facebookUserId"="asc"})
+ * @ODM\Index(keys={"linkedInProfile.oauth.token"="asc"})
  *
  * @AssertUser\Unique(
  *     message="email already exists",
