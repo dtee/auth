@@ -70,6 +70,11 @@ class UserAuth extends User
      * @Assert\MaxLength(limit="20", groups={"registration","reset"})
      */
     protected $plainPassword;
+    /**
+     * @ODM\NotSaved
+     *
+     */
+    protected $rememberMe;
 
     /**
      * @ODM\Field(type="string")
@@ -161,6 +166,34 @@ class UserAuth extends User
     protected $twitterProfile;
 
 	/**
+	 * Enter description here ...
+	 */
+	public function __construct()
+    {
+        parent::__construct();
+        $this->enabled = true;
+        $this->algorithm = 'sha512';
+        $this->groups = array();
+        $this->roles = array();
+    }
+
+	/**
+     * @return the $rememberMe
+     */
+    public function getRememberMe()
+    {
+        return $this->rememberMe;
+    }
+
+	/**
+     * @param field_type $rememberMe
+     */
+    public function setRememberMe($rememberMe)
+    {
+        $this->rememberMe = $rememberMe;
+    }
+
+	/**
      * @return the $linkedInProfile
      */
     public function getLinkedInProfile()
@@ -190,15 +223,6 @@ class UserAuth extends User
     public function setTwitterProfile($twitterProfile)
     {
         $this->twitterProfile = $twitterProfile;
-    }
-
-	public function __construct()
-    {
-        parent::__construct();
-        $this->enabled = true;
-        $this->algorithm = 'sha512';
-        $this->groups = array();
-        $this->roles = array();
     }
 
     public function setEmail($email)
@@ -383,6 +407,6 @@ class UserAuth extends User
             return $profile->getFirstName() . ' ' . $profile->getLastName();
         }
 
-        return $this->getId();
+        return $this->getFullname();
     }
 }
