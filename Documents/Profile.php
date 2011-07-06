@@ -28,6 +28,27 @@ class Profile
 	protected $lastName;
 
 	/**
+	 * ODM\File
+	 */
+	protected $image;
+
+	/**
+     * @return the $image
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+	/**
+     * @param field_type $image
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
+    }
+
+	/**
 	 * @return the $firstName
 	 */
 	public function getFirstName()
