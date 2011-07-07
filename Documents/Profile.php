@@ -28,7 +28,7 @@ class Profile
 	protected $lastName;
 
 	/**
-	 * ODM\File
+	 * @ODM\ReferenceOne(targetDocument="Image")
 	 */
 	protected $image;
 
