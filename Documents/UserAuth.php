@@ -144,6 +144,13 @@ class UserAuth extends User
     protected $profile;
 
     /**
+     * @ODM\EmbedOne(targetDocument="Profile")
+     * @ODM\Field(type="date")
+     */
+    protected $isEmailValidated;
+
+
+    /**
      * @ODM\Field(type="string")
      */
     protected $algorithm;
@@ -167,6 +174,22 @@ class UserAuth extends User
     protected $twitterProfile;
 
 	/**
+     * @return the $isEmailValidated
+     */
+    public function getIsEmailValidated()
+    {
+        return $this->isEmailValidated;
+    }
+
+	/**
+     * @param field_type $isEmailValidated
+     */
+    public function setIsEmailValidated($isEmailValidated)
+    {
+        $this->isEmailValidated = $isEmailValidated;
+    }
+
+	/**
 	 * Enter description here ...
 	 */
 	public function __construct()
@@ -174,6 +197,7 @@ class UserAuth extends User
         parent::__construct();
         $this->enabled = true;
         $this->algorithm = 'sha512';
+        $this->isEmailValidated = false;
         $this->groups = array();
         $this->roles = array();
     }
