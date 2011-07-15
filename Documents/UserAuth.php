@@ -144,8 +144,7 @@ class UserAuth extends User
     protected $profile;
 
     /**
-     * @ODM\EmbedOne(targetDocument="Profile")
-     * @ODM\Field(type="date")
+     * @ODM\Field(type="boolean")
      */
     protected $isEmailValidated;
 
