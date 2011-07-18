@@ -394,10 +394,6 @@ class UserAuth extends User
         }
     }
 
-    /**
-     * @Assert\NotBlank(groups={"registration"})
-     * @Assert\MinLength(limit=5, groups={"registration"})
-     */
     public function getFullname() {
         $firstname = $this->getFirstName();
         $lastname = $this->getLastName();
