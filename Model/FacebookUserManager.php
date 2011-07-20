@@ -137,6 +137,24 @@ class FacebookUserManager
         return $userAuth;
     }
 
+    public function getUserAuth($facebookUserId) {
+        $query = array(
+            'facebookProfile.facebookUserId' => $facebookUserId
+        );
+
+        if (isset($this->facebookUserIdCache[$facebookUserId]))
+        {
+            return $this->facebookUserIdCache[$facebookUserId];
+        }
+
+        $userAuth = $this->userRepository->findOneBy($query);
+        if ($userAuth) {
+            $this->facebookUserIdCache[$facebookUserId] = $userAuth;
+        }
+
+        return $userAuth;
+    }
+
     public function getFacebookUsersById($facebookUserIds)
     {
         $query = array(
