@@ -87,9 +87,9 @@ class UserAuth extends User
      */
     protected $passwordRequestedAt;
 
-    /**
-     * @ODM\Field(type="collection")
-     */
+	/**
+	 * @ODM\ReferenceMany(targetDocument="Group")
+	 */
     protected $groups;
 
     /**
@@ -100,7 +100,7 @@ class UserAuth extends User
     protected $salt;
 
     /**
-     * @ODM\Field(type="collection")
+     * @ODM\Field(type="hash")
      * @Assert\NotBlank()
      */
     protected $roles;
@@ -114,6 +114,11 @@ class UserAuth extends User
      * @ODM\Field(type="boolean")
      */
     protected $expired;
+
+    /**
+     * @ODM\Field(type="date")
+     */
+    protected $loginAt;
 
     /**
      * @ODM\Field(type="date")
@@ -173,6 +178,22 @@ class UserAuth extends User
     protected $twitterProfile;
 
 	/**
+     * @return the $loginAt
+     */
+    public function getLoginAt()
+    {
+        return $this->loginAt;
+    }
+
+	/**
+     * @param field_type $loginAt
+     */
+    public function setLoginAt($loginAt)
+    {
+        $this->loginAt = $loginAt;
+    }
+
+	/**
      * @return the $isEmailValidated
      */
     public function getIsEmailValidated()
@@ -194,11 +215,10 @@ class UserAuth extends User
 	public function __construct()
     {
         parent::__construct();
+        $this->groups = array();
         $this->enabled = true;
         $this->algorithm = 'sha512';
         $this->isEmailValidated = false;
-        $this->groups = array();
-        $this->roles = array();
     }
 
 	/**
