@@ -178,6 +178,38 @@ class UserAuth extends User
     protected $twitterProfile;
 
 	/**
+     * @return the $createdAt
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+	/**
+     * @return the $updatedAt
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+	/**
+     * @param field_type $createdAt
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+    }
+
+	/**
+     * @param field_type $updatedAt
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+    }
+
+	/**
      * @return the $loginAt
      */
     public function getLoginAt()
@@ -287,14 +319,6 @@ class UserAuth extends User
     }
 
     /**
-     * @return $createTime
-     */
-    public function getCreateTime()
-    {
-        return $this->createTime;
-    }
-
-    /**
      * @return $id
      */
     public function getId()
@@ -332,30 +356,6 @@ class UserAuth extends User
     public function setFacebookProfile($facebookProfile)
     {
         $this->facebookProfile = $facebookProfile;
-    }
-
-    /**
-     * @param $createTime
-     */
-    public function setCreateTime($createTime)
-    {
-        $this->createTime = $createTime;
-    }
-
-    /**
-     * @return $updateTime
-     */
-    public function getUpdateTime()
-    {
-        return $this->updateTime;
-    }
-
-    /**
-     * @param $updateTime
-     */
-    public function setUpdateTime($updateTime)
-    {
-        $this->updateTime = $updateTime;
     }
 
     public function getLastName() {
