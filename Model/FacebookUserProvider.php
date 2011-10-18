@@ -48,9 +48,9 @@ class FacebookUserProvider
         return $userAuth;
     }
 
-    public function loadUserByUsername($username)
+    public function loadUserByUsername($facebookUserId)
     {
-        $user = $this->findUserByFbId($username);
+        $user = $this->findUserByFbId($facebookUserId);
         return $user;
     }
 
