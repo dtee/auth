@@ -1,62 +1,33 @@
 <?php
 namespace Odl\AuthBundle\Model;
 
+use FOS\FacebookBundle\Facebook\FacebookSessionPersistence;
+
 use Odl\AuthBundle\Documents\FacebookProfile;
 use Odl\AuthBundle\Documents\UserAuth;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Facebook;
 use Exception;
+use BaseFacebook;
 
-class FacebookUserManager
+class FacebookUserProvider
+    implements UserProviderInterface
 {
     private $dm;
     private $facebook;
     private $userRepository;
 
-    public function __construct(DocumentManager $dm, Facebook $facebook)
+    public function __construct(DocumentManager $dm, BaseFacebook $facebook)
     {
-
         $this->dm = $dm;
         $this->facebook = $facebook;
 
         $this->userRepository = $this->dm->getRepository('Odl\AuthBundle\Documents\UserAuth');
     }
 
-    public function updateUser(UserAuth $userAuth)
+    public function supportsClass($class)
     {
-        if (!$userAuth->getGroups())
-        {
-            $userAuth->setGroups(array());
-        }
-
-    /*		$this->dm->persist($userAuth);
-		$this->dm->flush(); */
-    }
-
-    public function updateFriends(UserAuth $userAuth)
-    {
-        $facebookProfile = $userAuth->getFacebookProfile();
-
-        if (!$facebookProfile)
-            return;
-
-        $facebookUserId = $facebookProfile->getFacebookUserId();
-
-        try
-        {
-            $friends = $this->facebook->api("/{$facebookUserId}/friends");
-            $friends = $friends['data'];
-            $facebookProfile->setFriends($friends);
-        }
-        catch (\Exception $ex)
-        {
-        }
-
-        // Lets get friends also
-        $userAuth->setUsername('fb_' . $facebookProfile->getFacebookUserId());
-        $userAuth->setFacebookProfile($facebookProfile);
-
-        $this->updateUser($userAuth);
+        return true;
     }
 
     /**
@@ -106,38 +77,7 @@ class FacebookUserManager
         return null;
     }
 
-    protected $facebookUserIdCache = array();
-
-    public function createOrGetUser($facebookUserId)
-    {
-        // See if the user exists
-        $query = array(
-            'facebookProfile.facebookUserId' => $facebookUserId
-        );
-
-        if (isset($this->facebookUserIdCache[$facebookUserId]))
-        {
-            return $this->facebookUserIdCache[$facebookUserId];
-        }
-
-        $userAuth = $this->userRepository->findOneBy($query);
-
-        if (!$userAuth)
-        {
-            // Lets create a new user
-            $userAuth = new UserAuth();
-            $userAuth->setFacebookProfile($this->getFacebookProfile($facebookUserId));
-            $userAuth->setUsername("fb_{$facebookUserId}");
-            $this->dm->persist($userAuth);
-            $this->dm->flush();
-        }
-
-        $this->facebookUserIdCache[$facebookUserId] = $userAuth;
-        $this->dm->detach($userAuth);
-        return $userAuth;
-    }
-
-    public function getUserAuth($facebookUserId) {
+    public function findUserByFbId($facebookUserId) {
         $query = array(
             'facebookProfile.facebookUserId' => $facebookUserId
         );
@@ -155,14 +95,4 @@ class FacebookUserManager
         return $userAuth;
     }
 
-    public function getFacebookUsersById($facebookUserIds)
-    {
-        $query = array(
-            'facebookProfile.facebookUserId' => array(
-                '$in' => $facebookUserIds
-            )
-        );
-
-        $userAuth = $this->userRepository->findOneBy($query);
-    }
 }

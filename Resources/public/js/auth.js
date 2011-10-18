@@ -12,7 +12,7 @@ auth.fbLogin = function() {
 			// user is not logged in
 		}
 	}, {
-		perms : 'read_stream,publish_stream,offline_access,email'
+		scope : 'read_stream,publish_stream,offline_access,email'
 	});
 };
 

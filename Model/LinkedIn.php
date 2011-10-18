@@ -76,6 +76,11 @@ class LinkedIn
         );
     }
 
+    public function invalidateSession() {
+        $this->session->remove($this->sessionKey);
+        $this->session->save();
+    }
+
     /**
      * @param $state new|verified
      */
@@ -101,17 +106,25 @@ class LinkedIn
     public function getProfile($refresh = false) {
         $profile = $this->session->get('linkedin_profile');
         if ($refresh || !$profile) {
-            try {
-                $info = $this->pullProfile();
-                $profile = new LinkedInProfile($info);
-                $profile->setOauth($oauth);
-                $this->session->set('linkedin_profile', $profile);
-            } catch (\Exception $e) {
-                // Ignore
-            }
+            $info = $this->pullProfile();
+            $profile = new LinkedInProfile($info);
+            $profile->setOauth($this->getOAuthInfo());
+            $this->session->set('linkedin_profile', $profile);
         }
 
         return $profile;
+    }
+
+    public function api($url, $params = array(), $type = 'GET') {
+        $url = $this->baseUrl . $url;
+        $response = $this->consumer->sendRequest($url, $params, $type);
+
+        if ($response->getStatus() == 200) {
+            return json_decode($response->getBody(), true);
+        }
+        else {
+            throw new \Exception('Linkedin api error: ' . $response->getBody());
+        }
     }
 
     public function pullProfile(array $fields = null)
@@ -130,16 +143,7 @@ class LinkedIn
             );
         }
 
-        $uri = $this->baseUrl . '/v1/people/~:(' . implode(",", $fields) . ')';
-        $response = $this->consumer->sendRequest($uri, array(), 'GET');
-
-        if ($response->getStatus() == 200) {
-            return json_decode($response->getBody(), true);
-        }
-        else {
-            throw new \Exception('Linkedin api error: ' . $response->getBody());
-        }
-
-        return $response;
+        $url = '/v1/people/~:(' . implode(",", $fields) . ')';
+        return $this->api($url, array(), 'GET');
     }
 }
