@@ -13,11 +13,14 @@ class FacebookUserManager
     private $facebook;
     private $userRepository;
 
-    public function __construct(DocumentManager $dm, BaseFacebook $facebook)
+    public function __construct(
+        DocumentManager $dm,
+        BaseFacebook $facebook,
+        $className = 'Odl\AuthBundle\Documents\UserAuth')
     {
         $this->dm = $dm;
         $this->facebook = $facebook;
-        $this->userRepository = $this->dm->getRepository('Odl\AuthBundle\Documents\UserAuth');
+        $this->userRepository = $this->dm->getRepository($className);
     }
 
     public function updateFriends(UserAuth $userAuth)
