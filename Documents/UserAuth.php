@@ -142,10 +142,6 @@ class UserAuth extends User
      */
     protected $credentialsExpireAt;
 
-    /**
-     * @ODM\EmbedOne(targetDocument="Profile")
-     * @ODM\Index
-     */
     protected $profile;
 
     /**
@@ -414,15 +410,6 @@ class UserAuth extends User
         }
     }
 
-    public function getFullname() {
-        $firstname = $this->getFirstName();
-        $lastname = $this->getLastName();
-
-        if ($firstname && $lastname) {
-            return $firstname . ' ' . $lastname;
-        }
-    }
-
     public function generateConfirmationToken()
     {
         $this->confirmationToken = $this->generateToken();
@@ -447,6 +434,6 @@ class UserAuth extends User
             return $profile->getFirstName() . ' ' . $profile->getLastName();
         }
 
-        return $this->getFullname();
+        return null;
     }
 }
