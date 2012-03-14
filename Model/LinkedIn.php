@@ -4,7 +4,7 @@ namespace Odl\AuthBundle\Model;
 use Odl\AuthBundle\Documents\LinkedInProfile;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 use OAuth;
 use HTTP_OAuth_Consumer;
@@ -74,6 +74,16 @@ class LinkedIn
                 'token' => $this->consumer->getToken(),
                 'token_secret' => $this->consumer->getTokenSecret()
         );
+    }
+
+    public function setOAuthInfo(array $oAuthInfo, $changeSession = false) {
+        $this->consumer->setToken($oAuthInfo['token']);
+        $this->consumer->setTokenSecret($oAuthInfo['token_secret']);
+
+        // Don't change session
+        if ($changeSession) {
+            $this->session->set($this->sessionKey, $oAuthInfo);
+        }
     }
 
     public function invalidateSession() {
