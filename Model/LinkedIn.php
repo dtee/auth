@@ -22,7 +22,7 @@ class LinkedIn
     protected $request;
     protected $_isVerified = false;
 
-    public function __construct(array $config, Session $session, Request $request)
+    public function __construct(array $config, Session $session, Request $request = null)
     {
         $this->session = $session;
         $this->config = $config;
