@@ -22,12 +22,11 @@ class LinkedIn
     protected $request;
     protected $_isVerified = false;
 
-    public function __construct(array $config, Session $session, Request $request = null)
+    public function __construct(array $config, Session $session)
     {
         $this->session = $session;
         $this->config = $config;
         $this->sessionKey = $config['service'];
-        $this->request = $request;
 
         $httpRequest = new HTTP_Request2(null, HTTP_Request2::METHOD_GET, array(
                 'ssl_verify_peer' => false,
@@ -52,12 +51,13 @@ class LinkedIn
                 if ($requestToken['state'] == 'verified') {
                     $this->_isVerified = true;
                 }
-                else if ($verifier = $request->get('oauth_verifier')) {
-                    $consumer->getAccessToken($config['access_url'], $verifier);
-                    $this->saveSession('verified');
-                }
             }
         }
+    }
+
+    public function setVerifier($verifier) {
+        $this->consumer->getAccessToken($this->config['access_url'], $verifier);
+        $this->saveSession('verified');
     }
 
     public function isVerified() {
